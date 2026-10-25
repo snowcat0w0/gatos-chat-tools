@@ -411,7 +411,8 @@ mark.gct-hl {
 }
 .gct-speaker-bar .gct-sb-chip:hover .gct-sb-chip-remove { display: block; }
 .gct-speaker-bar .gct-sb-add { border-style: dashed; font-size: 14px; opacity: 0.8; }
-.gct-speaker-bar + #chat-message { border-top-left-radius: 0; border-top-right-radius: 0; }
+/* v14: #chat-message is a <prose-mirror> host; its first child (menu / .editor-container) carries the border. */
+.gct-speaker-bar + #chat-message, .gct-speaker-bar + #chat-message > :first-child { border-top-left-radius: 0; border-top-right-radius: 0; }
 
 /* ---- Ruby ---- */
 .chat-message ruby, .gct-viewer ruby { ruby-align: center; }
@@ -582,7 +583,8 @@ mark.gct-hl.current { background: #ff8c1a; outline: 2px solid #ff8c1a; }
 .gct-whisper-bar .gct-wb-clear { cursor: pointer; opacity: 0.8; }
 .gct-whisper-bar .gct-wb-clear:hover { opacity: 1; }
 .gct-whisper-bar.gct-wb-warn { background: rgba(170, 90, 40, 0.5); border-color: #d08a4a; }
-.gct-whisper-bar + #chat-message { border-top-left-radius: 0; border-top-right-radius: 0; }
+/* v14: #chat-message is a <prose-mirror> host; its first child (menu / .editor-container) carries the border. */
+.gct-whisper-bar + #chat-message, .gct-whisper-bar + #chat-message > :first-child { border-top-left-radius: 0; border-top-right-radius: 0; }
 .gct-whisper-dialog .gct-wt-mode { display: flex; align-items: center; gap: 6px; margin: 4px 0 2px; cursor: pointer; }
 .gct-whisper-dialog .gct-wt-sub { margin: 0 0 4px 24px; display: flex; flex-direction: column; gap: 2px; opacity: 0.55; }
 .gct-whisper-dialog .gct-wt-sub.active { opacity: 1; }

@@ -22,7 +22,7 @@ export async function setBookmarks(ids, on) {
   const update = {};
   for (const id of ids) {
     if (on) update[`${mod.flagKey("bookmarks")}.${id}`] = Date.now();
-    else update[`${mod.flagKey("bookmarks")}.-=${id}`] = null;
+    else update[`${mod.flagKey("bookmarks")}.${id}`] = _del; // v14 ForcedDeletion (the `-=` key form is deprecated)
   }
   await game.user.update(update);
   for (const id of ids) {

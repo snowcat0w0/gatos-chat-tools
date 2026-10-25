@@ -89,8 +89,16 @@ function canUpload() {
   return game.user.isGM || game.user.can("FILES_UPLOAD");
 }
 
+/** The chat input: a <prose-mirror> element in v14 (its `focus()` focuses the editor view). */
 function chatInput() {
   return document.getElementById("chat-message");
+}
+
+/** Does the chat input hold no text and no inline content? Its `value` is the editor's serialized HTML ("" when empty). */
+function inputIsEmpty(input) {
+  const html = String(input?.value ?? "");
+  if (/<(?:img|video|iframe|hr)\b/i.test(html)) return false;
+  return !html.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
 }
 
 function escapeAttr(s) {
@@ -146,7 +154,7 @@ function trayElement() {
       if (btn) removeItem(btn.dataset.remove);
     });
   }
-  // Keep it just above the input (v13 moves the input into the notification area when the sidebar collapses).
+  // Keep it just above the input (Foundry moves the input into the notification area when the sidebar collapses).
   const anchor = input.previousElementSibling?.classList.contains("gct-speaker-bar") ? input.previousElementSibling : input;
   if (tray.nextElementSibling !== anchor) anchor.before(tray);
   return tray;
@@ -256,7 +264,9 @@ async function sendImagesOnly(items) {
   const speaker = cls.getSpeaker();
   const style = speaker.token || speaker.actor ? CONST.CHAT_MESSAGE_STYLES.IC : CONST.CHAT_MESSAGE_STYLES.OOC;
   clearTray();
-  await cls.create({ content: imageHtml(items), speaker, style, author: game.user.id }, { chatBubble: false });
+  // v14 applies the chat controls' message mode (public / gm / blind / self / ic) to typed messages; do the same here.
+  const messageMode = game.settings.get("core", "messageMode");
+  await cls.create({ content: imageHtml(items), speaker, style, author: game.user.id }, { chatBubble: false, messageMode });
 }
 
 /** Enter in the chat input: wait for uploads, and send image-only messages ourselves. */
@@ -265,12 +275,14 @@ function onKeyDown(event) {
   if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
   const input = event.target?.closest?.("#chat-message");
   if (!input || !pending.length) return;
-  const empty = !input.value.trim();
+  const empty = inputIsEmpty(input);
   const waiting = pending.some((i) => i.status === "uploading");
   if (!empty && !waiting) return; // Foundry sends the text; images are attached in preCreateChatMessage
 
   event.preventDefault();
   event.stopImmediatePropagation();
+  // ProseMirror listens on its contenteditable view, not on the <prose-mirror> host.
+  const view = event.target.closest?.(".ProseMirror") ?? input.querySelector(".ProseMirror") ?? input;
   (async () => {
     if (waiting) {
       ui.notifications.info(Li("Waiting"));
@@ -278,10 +290,10 @@ function onKeyDown(event) {
     }
     const ready = pending.filter((i) => i.status === "ready");
     if (!ready.length) return;
-    if (!input.value.trim()) return sendImagesOnly(ready);
-    const again = new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true, cancelable: true });
+    if (inputIsEmpty(input)) return sendImagesOnly(ready);
+    const again = new KeyboardEvent("keydown", { key: "Enter", code: "Enter", keyCode: 13, bubbles: true, cancelable: true });
     ownEvents.add(again);
-    input.dispatchEvent(again);
+    view.dispatchEvent(again);
   })();
 }
 

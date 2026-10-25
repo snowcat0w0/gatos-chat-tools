@@ -71,7 +71,7 @@ export function onPreCreateChatMessage(message, data, options) {
 export function portraitFlagUpdate(speaker) {
   const { token, actor } = lookupPortrait(speaker);
   if (token || actor) return { [mod.flagKey("portrait")]: { token, actor } };
-  return { [mod.flagDeleteKey("portrait")]: null };
+  return { [mod.flagKey("portrait")]: _del }; // v14 ForcedDeletion (the `-=` key form is deprecated)
 }
 
 /** Add (or refresh) the portrait on a rendered chat message element. */

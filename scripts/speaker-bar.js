@@ -272,7 +272,7 @@ function applyLockedSpeaker(message, data, userId) {
     alias: locked.alias ?? token?.name ?? actor?.name ?? game.user.name,
   };
   const update = { speaker };
-  // v13 shows the author's name for OOC messages regardless of speaker, so a locked speaker speaks in character.
+  // Foundry (v13/v14) shows the author's name for OOC messages regardless of speaker, so a locked speaker speaks in character.
   if (message.style === CONST.CHAT_MESSAGE_STYLES.OOC) update.style = CONST.CHAT_MESSAGE_STYLES.IC;
   message.updateSource(update);
   if (data) {

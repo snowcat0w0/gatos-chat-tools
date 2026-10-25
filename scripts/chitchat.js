@@ -58,9 +58,12 @@ export function isChitchat(message) {
   return !!(message?.flags?.[MODULE_ID]?.chitchat || message?.chitchat);
 }
 
+/** v14's ProseMirror chat input sends HTML: keep its line breaks (<br>, paragraphs) as "\n" (shown via pre-wrap). */
 function htmlToPlainText(html) {
   const div = document.createElement("div");
   div.innerHTML = html;
+  div.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
+  div.querySelectorAll("p, div, li").forEach((block) => block.append("\n"));
   return (div.textContent ?? "").trim();
 }
 

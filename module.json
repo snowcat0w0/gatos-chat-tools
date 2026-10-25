@@ -2,19 +2,19 @@
   "id": "gatos-chat-tools",
   "title": "Gato's Chat Tools",
   "description": "채팅 이미지 붙여넣기·업로드(Chat Images 대체), 귓속말 대상(GM·플레이어·토큰 소유자) 지정, 채팅 메시지 수정·즉시 삭제·순서 이동, 잡담·그룹화·발화자 바·포트레잇·루비, 세션 로그와 자동 아카이브, 북마크·하이라이트, 고급 검색·다중 선택, 아카이브 가져오기·병합, TXT/Markdown/HTML/ZIP/폴더/저널 내보내기. 시스템 무관.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "authors": [
     {
       "name": "jesun"
     }
   ],
   "compatibility": {
-    "minimum": "13",
-    "verified": "13"
+    "minimum": "14",
+    "verified": "14"
   },
   "relationships": {
     "requires": [
-      { "id": "gatos-lib", "type": "module", "compatibility": { "minimum": "1.0.0-alpha.1" } }
+      { "id": "gatos-lib", "type": "module", "compatibility": { "minimum": "1.1.0-alpha.1" } }
     ]
   },
   "esmodules": [

@@ -4,6 +4,7 @@ import { matchChitchat } from "./chitchat.js";
 
 const FLAG = "whisperTarget";
 const BAR_CLASS = "gct-whisper-bar";
+const PENDING_KEY = "whisperPending";
 
 /*
  * Whisper targets chosen from the chat controls. The target is a per-user setting (user flag) that
@@ -145,12 +146,13 @@ export function onChatMessageWhisper(chatLog, text, chatData) {
   const fromOverride = !!override;
   const t = override ?? getWhisperTarget();
   if (t.mode === "public") return;
-  const trimmed = String(text ?? "").trim();
+  // v14 chat input is a ProseMirror editor: the text arrives as HTML ("<p>/w …</p>").
+  const trimmed = String(text ?? "").replace(/^(?:\s|<[^>]*>)*/, "").trim();
   if (trimmed.startsWith("/") && !matchChitchat(trimmed)) return; // /w, /r, /gm … keep core behaviour
   const r = resolveRecipients(t);
   if (!r) return;
   if (r.warning) ui.notifications.warn(r.warning);
-  chatData.whisper = r.ids;
+  chatData.whisper = [...r.ids];
   chatData.flags = foundry.utils.mergeObject(chatData.flags ?? {}, {
     [MODULE_ID]: {
       whisperTo: {
@@ -158,9 +160,19 @@ export function onChatMessageWhisper(chatLog, text, chatData) {
         label: describeTarget(t),
         ...(t.mode === "token" ? { sceneId: t.sceneId, tokenId: t.tokenId } : {}),
       },
+      // Transient: v14 processMessage creates with a `messageMode` option whose applyMode() (in _preCreate) resets
+      // `whisper` ("public"/"self") or sets `blind`. preCreateChatMessage re-applies these ids and drops the key.
+      [PENDING_KEY]: [...r.ids],
     },
   });
   if (t.oneShot && !fromOverride) setTimeout(() => clearWhisperTarget(), 0);
+}
+
+/** preCreateChatMessage (runs after ChatMessage#_preCreate): restore the chosen recipients over the core message mode. */
+function restorePendingWhisper(message) {
+  const ids = message.flags?.[MODULE_ID]?.[PENDING_KEY];
+  if (!Array.isArray(ids)) return;
+  message.updateSource({ whisper: [...ids], blind: false, flags: { [MODULE_ID]: { [PENDING_KEY]: _del } } });
 }
 
 /**
@@ -169,6 +181,7 @@ export function onChatMessageWhisper(chatLog, text, chatData) {
  */
 export function onPreCreateChatMessageWhisperGM(message, data, options, userId) {
   if (userId !== game.user.id) return;
+  restorePendingWhisper(message);
   // Whispered documents reach every client (hidden in the log), but Foundry shows the chat bubble on all
   // of them without a visibility check, which would leak the text over the token. No bubbles for whispers.
   if (message.whisper?.length && options) options.chatBubble = false;
@@ -290,14 +303,14 @@ export async function openWhisperDialog() {
 /*  Chat input UI                               */
 /* -------------------------------------------- */
 
-/** The secret-agent button in the chat controls (click: choose target, right-click: back to public). gatos-lib addChatControl, after #roll-privacy. */
+/** The secret-agent button in the chat controls (click: choose target, right-click: back to public). gatos-lib addChatControl, after #message-modes (v14's #roll-privacy). */
 export function injectWhisperButton() {
   const btn = addChatControl({
     cls: "gct-whisper-btn",
     icon: "fa-solid fa-user-secret",
     onClick: () => openWhisperDialog(),
     onContextMenu: () => clearWhisperTarget(),
-    position: { after: "#roll-privacy", fallback: "prepend" },
+    position: { after: "#message-modes", fallback: "prepend" },
   });
   if (!btn) return;
   updateWhisperBar();
