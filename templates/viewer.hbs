@@ -1,0 +1,77 @@
+<div class="gct-layout">
+  <aside class="gct-sources">
+    <div class="gct-session-box{{#if session}} active{{/if}}">
+      {{#if session}}
+      <div class="gct-session-now"><i class="fa-solid fa-circle"></i> {{session.label}}</div>
+      <div class="meta">{{localize "GCT.Session.Since" time=session.started count=session.count}}</div>
+      {{#if isGM}}<button type="button" data-action="endSession"><i class="fa-solid fa-flag-checkered"></i> {{localize "GCT.Session.EndAndSave"}}</button>{{/if}}
+      {{else}}
+      {{#if isGM}}<button type="button" data-action="startSession"><i class="fa-solid fa-flag"></i> {{localize "GCT.Session.Start"}}</button>{{else}}<div class="meta">{{localize "GCT.Session.None"}}</div>{{/if}}
+      {{/if}}
+    </div>
+
+    {{#if isGM}}
+    <button type="button" class="gct-save-btn" data-action="saveArchive">
+      <i class="fa-solid fa-floppy-disk"></i> {{localize "GCT.Archive.SaveNew"}}
+    </button>
+    <button type="button" class="gct-delete-btn" data-action="deleteRange">
+      <i class="fa-solid fa-trash"></i> {{localize "GCT.DeleteRange.Button"}}
+    </button>
+    <div class="gct-archive-tools">
+      <button type="button" data-action="importArchive" data-tooltip="{{localize 'GCT.Files.ImportTooltip'}}"><i class="fa-solid fa-file-import"></i> {{localize "GCT.Files.Import"}}</button>
+      <button type="button" data-action="mergeArchives" {{#unless canMerge}}disabled{{/unless}} data-tooltip="{{localize 'GCT.Files.MergeTooltip'}}"><i class="fa-solid fa-object-group"></i> {{localize "GCT.Files.Merge"}}</button>
+      <input type="file" class="gct-import-input" accept=".json,application/json" multiple hidden>
+    </div>
+    {{/if}}
+
+    <ol class="gct-source-list">
+      <li class="gct-source {{#if liveActive}}active{{/if}}" data-action="selectSource" data-source="live">
+        <div class="name"><i class="fa-solid fa-comments"></i> {{localize "GCT.Viewer.Live"}}</div>
+        <div class="meta">{{liveCount}}</div>
+      </li>
+      {{#if sessions.length}}<li class="gct-source-group">{{localize "GCT.Session.Group"}}</li>{{/if}}
+      {{#each sessions}}{{> gctSourceRow isGM=../isGM}}{{/each}}
+      {{#if others.length}}<li class="gct-source-group">{{localize "GCT.Viewer.OtherArchives"}}</li>{{/if}}
+      {{#each others}}{{> gctSourceRow isGM=../isGM}}{{/each}}
+      {{#unless hasArchives}}<li class="gct-no-archives">{{localize "GCT.Viewer.NoArchives"}}</li>{{/unless}}
+    </ol>
+  </aside>
+
+  <section class="gct-main">
+    <div class="gct-toolbar">
+      <input type="search" name="query" placeholder="{{localize 'GCT.Viewer.Search'}}" value="{{query}}" autocomplete="off">
+      <label class="gct-check" data-tooltip="{{localize 'GCT.Viewer.RegexHint'}}"><input type="checkbox" name="regex" {{#if regex}}checked{{/if}}> .*</label>
+      <span class="gct-nav">
+        <a data-action="searchPrev" data-tooltip="{{localize 'GCT.Viewer.PrevMatch'}}"><i class="fa-solid fa-chevron-up"></i></a>
+        <span class="gct-nav-count">0/0</span>
+        <a data-action="searchNext" data-tooltip="{{localize 'GCT.Viewer.NextMatch'}}"><i class="fa-solid fa-chevron-down"></i></a>
+      </span>
+      <span class="gct-count"></span>
+      <button type="button" class="gct-select-toggle{{#if selectMode}} active{{/if}}" data-action="toggleSelectMode" data-tooltip="{{localize 'GCT.Select.ModeHint'}}"><i class="fa-solid fa-list-check"></i> {{localize "GCT.Select.Mode"}}</button>
+      <button type="button" data-action="exportDialog" data-tooltip="{{localize 'GCT.Viewer.ExportTooltip'}}"><i class="fa-solid fa-file-export"></i> {{localize "GCT.Viewer.Export"}}</button>
+      {{#each extraActions}}
+      <button type="button" class="gct-extra-action" data-action="viewerAction" data-id="{{id}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}><i class="{{icon}}"></i> {{label}}</button>
+      {{/each}}
+    </div>
+    <div class="gct-toolbar gct-toolbar2">
+      <select name="speaker"><option value="">{{localize "GCT.Viewer.AllSpeakers"}}</option></select>
+      <select name="user"><option value="">{{localize "GCT.Viewer.AllUsers"}}</option></select>
+      <select name="kind">{{#each kinds}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      <label class="gct-date"><span>{{localize "GCT.Viewer.From"}}</span><input type="date" name="from" value="{{from}}"></label>
+      <label class="gct-date"><span>{{localize "GCT.Viewer.To"}}</span><input type="date" name="to" value="{{to}}"></label>
+      <label class="gct-check" data-tooltip="{{localize 'GCT.Viewer.IncludeChitchatHint'}}"><input type="checkbox" name="chitchat" {{#if includeChitchat}}checked{{/if}}> {{localize "GCT.Viewer.IncludeChitchat"}}</label>
+    </div>
+    <div class="gct-selectbar" hidden>
+      <span class="gct-select-count"></span>
+      <button type="button" data-action="selectAll">{{localize "GCT.Select.All"}}</button>
+      <button type="button" data-action="clearSelection" data-needs-selection>{{localize "GCT.Select.Clear"}}</button>
+      <button type="button" data-action="bookmarkSelected" data-needs-selection><i class="fa-solid fa-star"></i> {{localize "GCT.Select.Bookmark"}}</button>
+      <button type="button" data-action="exportSelected" data-needs-selection><i class="fa-solid fa-file-export"></i> {{localize "GCT.Select.Export"}}</button>
+      {{#each extraActions}}{{#if selection}}
+      <button type="button" class="gct-extra-action" data-action="viewerAction" data-id="{{id}}" data-needs-selection{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}><i class="{{icon}}"></i> {{label}}</button>
+      {{/if}}{{/each}}
+      <button type="button" class="gct-danger" data-action="deleteSelected" data-needs-selection><i class="fa-solid fa-trash"></i> {{localize "GCT.Select.Delete"}}</button>
+    </div>
+    <ol class="gct-results"></ol>
+  </section>
+</div>

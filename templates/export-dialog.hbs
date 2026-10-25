@@ -1,0 +1,43 @@
+<div class="gct-export">
+  <fieldset class="gct-export-modes">
+    <legend>{{localize "GCT.ExportDialog.Format"}}</legend>
+    {{#each modes}}
+    <label class="gct-mode-row">
+      <input type="radio" name="mode" value="{{value}}" {{#if checked}}checked{{/if}}>
+      <strong>{{label}}</strong>
+    </label>
+    <p class="hint gct-mode-hint" data-mode="{{value}}" hidden>{{hint}}</p>
+    {{/each}}
+  </fieldset>
+
+  <fieldset class="gct-export-options">
+    <legend>{{localize "GCT.ExportDialog.Options"}}</legend>
+    <label class="gct-check-row">
+      <input type="checkbox" name="chitchat" {{#if includeChitchat}}checked{{/if}}>
+      <span>{{localize "GCT.ExportDialog.IncludeChitchat"}}{{#unless hasChitchat}} <em class="gct-dim">({{localize "GCT.ExportDialog.NoneInSet"}})</em>{{/unless}}</span>
+    </label>
+    <label class="gct-check-row">
+      <input type="checkbox" name="whispers" checked>
+      <span>{{localize "GCT.ExportDialog.IncludeWhispers"}}{{#unless hasWhispers}} <em class="gct-dim">({{localize "GCT.ExportDialog.NoneInSet"}})</em>{{/unless}}</span>
+    </label>
+    <label class="gct-check-row gct-mode-opt" data-modes="html,zip,dir,window,journal">
+      <input type="checkbox" name="portraits" checked>
+      <span>{{localize "GCT.ExportDialog.IncludePortraits"}}</span>
+    </label>
+    <label class="gct-check-row gct-mode-opt" data-modes="html,zip,dir,window">
+      <input type="checkbox" name="userColors">
+      <span>{{localize "GCT.ExportDialog.UserColors"}}</span>
+    </label>
+    <label class="gct-check-row">
+      <input type="checkbox" name="diceDetails">
+      <span>{{localize "GCT.ExportDialog.DiceDetails"}}</span>
+    </label>
+    <label class="gct-check-row gct-mode-opt" data-modes="journal">
+      <input type="checkbox" name="journalPublic">
+      <span>{{localize "GCT.ExportDialog.JournalPublic"}}</span>
+    </label>
+  </fieldset>
+
+  <p class="notes gct-export-summary">{{{localize "GCT.ExportDialog.Summary" count="<strong class='gct-export-count'>0</strong>"}}}</p>
+  {{#if dirSupported}}<p class="hint"><a class="gct-dir-reset">{{localize "GCT.ExportDialog.DirResetLink"}}</a></p>{{/if}}
+</div>

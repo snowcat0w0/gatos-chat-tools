@@ -1,0 +1,32 @@
+{{#each messages}}
+<li class="gct-msg chat-message themed theme-light {{cls}}{{#if img}} gct-has-portrait{{/if}}" data-message-id="{{id}}" data-day="{{day}}" style="--gct-portrait-size: {{../portraitSize}}px;{{#if chitchat}} --gct-cc-color: {{ccColor}}; --gct-cc-bg: {{ccBg}};{{/if}}">
+  <input type="checkbox" class="gct-select" {{#if checked}}checked{{/if}} aria-label="{{localize 'GCT.Select.One'}}">
+  {{#if marker}}
+  <div class="gct-content message-content">{{{html}}}</div>
+  <span class="gct-msg-tools"><time class="gct-time" title="{{timeFull}}">{{time}}</time></span>
+  {{else}}
+  <header class="gct-msg-header">
+    {{#if img}}<img class="gct-portrait {{../portraitShape}}" src="{{img}}" alt="{{alias}}" title="{{imgTitle}}" loading="lazy">{{/if}}
+    <span class="gct-alias">{{alias}}</span>
+    {{#if user}}<span class="gct-user">{{user}}</span>{{/if}}
+    {{#if secret}}<span class="gct-secret"><i class="fa-solid fa-user-secret"></i> {{secret}}</span>{{/if}}
+    <time class="gct-time" title="{{timeFull}}">{{time}}</time>
+    <span class="gct-msg-tools">
+      <a class="gct-star" data-action="toggleBookmark" data-tooltip="{{#if bookmarked}}{{localize 'GCT.Bookmark.Remove'}}{{else}}{{localize 'GCT.Bookmark.Add'}}{{/if}}"><i class="{{#if bookmarked}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i></a>
+      {{#if ../live}}<a class="gct-jump" data-action="jumpTo" data-tooltip="{{localize 'GCT.Viewer.JumpTo'}}"><i class="fa-solid fa-location-arrow"></i></a>{{/if}}
+    </span>
+  </header>
+  {{#if flavor}}<div class="gct-flavor">{{{flavor}}}</div>{{/if}}
+  {{#if chitchat}}
+  <div class="gct-content message-content"><span class="gct-cc-name">{{alias}}</span><span class="gct-cc-text">{{{html}}}</span></div>
+  {{else}}
+  <div class="gct-content message-content">{{{html}}}</div>
+  {{/if}}
+  {{/if}}
+</li>
+{{else}}
+<li class="gct-empty">{{localize "GCT.Viewer.Empty"}}</li>
+{{/each}}
+{{#if hasMore}}
+<li class="gct-more"><button type="button" data-action="loadMore">{{localize "GCT.Viewer.LoadMore"}} ({{remaining}})</button></li>
+{{/if}}

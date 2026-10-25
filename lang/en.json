@@ -1,0 +1,402 @@
+{
+  "GCT": {
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "Delete": "Delete",
+    "Rename": "Rename",
+    "Settings": {
+      "InstantDelete": {
+        "Name": "Delete button deletes instantly",
+        "Hint": "Clicking the trash button on a chat message deletes it without a confirmation dialog."
+      },
+      "PlayerEdit": {
+        "Name": "Players may edit/delete their own messages",
+        "Hint": "Players can edit the content and speaker of messages they sent, and delete them. GMs can always edit every message."
+      },
+      "ShowButtons": {
+        "Name": "Show edit/delete buttons on messages",
+        "Hint": "Adds edit (pencil) and delete (trash) buttons to the chat message header. When off, editing is available from the right-click menu only."
+      },
+      "HideSecret": {
+        "Name": "Hide secret messages from players in archives",
+        "Hint": "When players view an archive, whispers not addressed to them and blind rolls are hidden. GMs always see everything."
+      },
+      "ShowPortrait": {
+        "Name": "Show portraits on chat cards",
+        "Hint": "Shows the speaker's image on the first row of each message, next to the name (this client only). Uses the token image when the token is on a scene, otherwise the actor portrait; images are frozen when the message is posted, so later changes do not alter existing messages."
+      },
+      "PortraitSize": {
+        "Name": "Portrait size (px)",
+        "Hint": "Side length of the chat card portrait."
+      },
+      "PortraitShape": {
+        "Name": "Portrait shape",
+        "Hint": "",
+        "Square": "Square",
+        "Circle": "Circle"
+      },
+      "ChitchatTrigger": {
+        "Name": "Extra chitchat trigger",
+        "Hint": "Prefix used in addition to the built-in '/pt ', '`' and '!'. Leave empty to use only the built-in ones."
+      },
+      "ChitchatAsOOC": {
+        "Name": "Create chitchat as OOC",
+        "Hint": "On: chitchat uses the OOC style. Off: the Other style."
+      },
+      "ChitchatFontSize": {
+        "Name": "Chitchat font size (px)",
+        "Hint": ""
+      },
+      "ChitchatBrightness": {
+        "Name": "Chitchat background brightness",
+        "Hint": "Chitchat is tinted with the sender's user colour; higher values are closer to white."
+      },
+      "ChitchatLineBreak": {
+        "Name": "Line break after chitchat name",
+        "Hint": "Show the text on the line below the user name."
+      },
+      "GroupMessages": {
+        "Name": "Group consecutive messages",
+        "Hint": "Consecutive messages by the same user and speaker are shown as one block (name and portrait omitted on continuations)."
+      },
+      "GroupChitchat": {
+        "Name": "Group consecutive chitchat",
+        "Hint": "Consecutive chitchat messages are shown as one block."
+      },
+      "GroupGap": {
+        "Name": "Maximum grouping gap (minutes)",
+        "Hint": "Start a new block when a message is this far from the previous one. 0 = no limit."
+      },
+      "SpeakerBar": {
+        "Name": "Show speaker bar",
+        "Hint": "Shows above the chat input who the next message will be spoken as, with lock and favourites."
+      },
+      "SpeakerFavorites": {
+        "Name": "Show speaker favourites",
+        "Hint": "Shows a row of favourite speaker chips on the speaker bar."
+      },
+      "FavoriteChipMode": {
+        "Portrait": "Portrait",
+        "Name": "Favourite chip style",
+        "NameChoice": "Name"
+      },
+      "SessionAnnounce": {
+        "Name": "Announce session start/end in chat",
+        "Hint": "Posts a marker card when a session starts or ends, which makes session boundaries easy to find in archives."
+      },
+      "AutoThreshold": {
+        "Name": "Auto archive: chat message count",
+        "Hint": "When the chat log holds more messages than this, the GM client saves everything since the last archive and clears archived messages from the log. 0 = off. Paused while a session runs (the session end saves it)."
+      },
+      "AutoKeep": {
+        "Name": "Recent messages to keep after auto archive",
+        "Hint": "When auto archive clears the log, this many of the newest messages stay (at most half the threshold)."
+      },
+      "AutoOnLoad": {
+        "Name": "Save leftovers when a GM logs in",
+        "Hint": "When a GM logs in and there are unarchived messages whose newest is over three hours old, they are saved as an archive of the previous sitting. (The moment a world shuts down cannot be caught reliably, so this happens at the next login.)"
+      },
+      "ChatImagesCompat": {
+        "Name": "Chat Images compatibility patch",
+        "Hint": "When the Chat Images module is active: fixes the endless spinner on image paste in Foundry v13, turns off the hook debug logging it forces on, and pre-shrinks large screenshots so they upload quickly. Off = Chat Images' original behaviour."
+      },
+      "ImageAttach": {
+        "Name": "Chat image attachments",
+        "Hint": "Paste, drop or pick images in the chat input; they are uploaded to the server and put in the message. Large screenshots are shrunk to WebP. Idle while the Chat Images module is active (its compatibility patch runs instead)."
+      },
+      "ImageUploadFolder": {
+        "Name": "Chat image upload folder",
+        "Hint": "Folder under Data. The default matches Chat Images (uploaded-chat-images), so old and new images share it."
+      },
+      "ImageUploadButton": {
+        "Name": "Show image button",
+        "Hint": "Show an image button in the chat controls (only with upload permission)."
+      },
+      "TokenHud": {
+        "Name": "Whisper menu when clicking a token",
+        "Hint": "Clicking a token shows a translucent menu at the top of the screen for whispering straight to that token's owners. Appears for tokens with a player owner other than you and, for players, for any token that is not their assigned character. When several users share a token (covert play) they can whisper to each other through it (this client only)."
+      }
+    },
+    "Edit": {
+      "Title": "Edit Message",
+      "Speaker": "Speaker (Actor)",
+      "NoActor": "No actor (show user name)",
+      "Alias": "Display name",
+      "AliasHint": "Leave blank to use the actor (or user) name",
+      "Flavor": "Flavor text",
+      "Content": "Content (HTML)",
+      "ContentHint": "Edits the raw HTML of the message body. For plain messages, just change the text. Ruby text is written as [[base|reading]].",
+      "Saved": "Message updated.",
+      "NoPermission": "You do not have permission to edit this message.",
+      "ChitchatNote": "Chitchat is always shown under the sending player's name; the speaker cannot be changed.",
+      "Timestamp": "Sent at",
+      "TimestampHint": "GM only. Changing it moves the message to that time position for everyone."
+    },
+    "Chat": {
+      "OpenViewer": "Chat Archive / Search",
+      "DeleteNow": "Delete message"
+    },
+    "Archive": {
+      "SaveNew": "Save current chat as archive",
+      "SaveTitle": "Save Chat Archive",
+      "Name": "Archive name",
+      "Range": "Range",
+      "RangeAll": "Everything",
+      "RangeSinceLast": "Since last archive ({date})",
+      "RangeToday": "Today",
+      "Range7": "Last 7 days",
+      "Range30": "Last 30 days",
+      "RangeCustom": "Custom",
+      "CustomDates": "Dates (from ~ to)",
+      "Preview": "Messages in range: {count}",
+      "DeleteAfter": "Delete from chat log after saving",
+      "DeleteAfterHint": "Removes the saved messages from the chat log. The archive file is kept.",
+      "NoMessages": "There are no messages to save.",
+      "Saving": "Saving chat archive… ({count} messages)",
+      "Saved": "Archive \"{name}\" saved ({count} messages)",
+      "Deleting": "Deleting from chat log…",
+      "SaveFailed": "Failed to save archive: {error}",
+      "LoadFailed": "Could not load archive file: {path}",
+      "DeleteConfirmTitle": "Delete Archive",
+      "DeleteConfirm": "Remove archive \"{name}\" from the list? The file ({path}) stays on the server.",
+      "RenameTitle": "Rename Archive",
+      "GMOnly": "Only a GM can save archives.",
+      "DefaultName": "{world} {date}"
+    },
+    "Viewer": {
+      "Title": "Chat Archive",
+      "Live": "Current chat log",
+      "Search": "Search (content, speaker, flavor)",
+      "AllSpeakers": "All speakers",
+      "From": "From",
+      "To": "To",
+      "Count": "{shown} / {total}",
+      "ExportTooltip": "Export the currently shown (filtered) messages as TXT / HTML / ZIP / folder, or open them in a new window",
+      "LoadMore": "Load more",
+      "Empty": "No messages.",
+      "JumpTo": "Show in chat",
+      "NoArchives": "No archives saved yet.",
+      "Whisper": "Whisper",
+      "Blind": "Blind",
+      "Loading": "Loading…",
+      "NothingToExport": "There are no messages to export.",
+      "IncludeChitchat": "Chitchat",
+      "IncludeChitchatHint": "Include chitchat messages in the list (also applies to export)",
+      "Export": "Export",
+      "AllUsers": "All users",
+      "OtherArchives": "Archives",
+      "RegexHint": "Search with a regular expression (case-insensitive)",
+      "PrevMatch": "Previous match (Shift+Enter)",
+      "NextMatch": "Next match (Enter)",
+      "Kind": {
+        "all": "All kinds",
+        "rolls": "Rolls",
+        "whispers": "Whispers & blind",
+        "chitchat": "Chitchat",
+        "bookmarks": "My bookmarks",
+        "highlights": "Highlights",
+        "markers": "Session markers"
+      }
+    },
+    "Export": {
+      "Title": "{world} Chat Log",
+      "Period": "Period",
+      "Messages": "Messages",
+      "ExportedAt": "Exported",
+      "Source": "Source",
+      "Count": "{count}",
+      "Dice": "Dice"
+    },
+    "DeleteRange": {
+      "Title": "Delete Chat Messages",
+      "Button": "Delete messages by date",
+      "Range": "Range",
+      "RangeArchived": "Up to last archive (before {date})",
+      "Hint": "Deletes the current chat messages in the chosen range. Messages that were never archived are lost too; this cannot be undone.",
+      "Preview": "Messages to delete: {count}",
+      "Confirm": "Delete {count} messages? This cannot be undone.",
+      "Done": "Deleted {count} messages.",
+      "NoMessages": "There are no messages to delete.",
+      "Deleting": "Deleting messages… ({count})"
+    },
+    "Chitchat": {
+      "Label": "Chitchat"
+    },
+    "SpeakerBar": {
+      "LockTooltip": "Lock / unlock speaker",
+      "ResetTooltip": "Back to default speaker (unlock)",
+      "AddTooltip": "Add current speaker to favourites",
+      "Locked": "Speaker locked to '{name}'.",
+      "Unlocked": "Speaker unlocked.",
+      "NothingToLock": "No speaker to lock. Select a token or assign a character.",
+      "FavDuplicate": "That speaker is already a favourite.",
+      "FavFull": "Favourites are full (max 12)."
+    },
+    "ExportDialog": {
+      "Title": "Export Chat Log",
+      "Format": "Format",
+      "Options": "Contents",
+      "ModeTxt": "TXT file",
+      "ModeTxtHint": "Readable plain text, no images or formatting.",
+      "ModeHtml": "Single HTML file",
+      "ModeHtmlHint": "CSS and images (portraits included) are embedded in one file that opens anywhere.",
+      "ModeZip": "ZIP file",
+      "ModeZipHint": "HTML + chat-styles.css + images/ + portraits/ as a zip. Unpack several sessions into one folder to share CSS and images.",
+      "ModeDir": "Save to folder",
+      "ModeDirHint": "Pick a folder once; later exports write HTML, CSS and images straight into it (Chrome, Edge and the Foundry app only).",
+      "ModeWindow": "Open in new window",
+      "ModeWindowHint": "Shows the log in a new browser window without creating a file.",
+      "IncludeChitchat": "Include chitchat",
+      "IncludeWhispers": "Include whispers and blind messages",
+      "IncludePortraits": "Include portraits",
+      "NoneInSet": "none present",
+      "Summary": "Messages to export: {count}",
+      "Run": "Export",
+      "Working": "Building chat log…",
+      "Done": "Export finished",
+      "DirDone": "Saved into folder '{name}'.",
+      "DirUnsupported": "This browser does not support saving to a folder.",
+      "DirResetLink": "Forget the remembered export folder",
+      "DirReset": "Export folder cleared; you will be asked again next time.",
+      "PopupBlocked": "Popup blocked. Allow popups and try again.",
+      "Failed": "Export failed: {error}",
+      "ModeMd": "Markdown file",
+      "ModeMdHint": "A .md text that pastes well into Discord, Notion, Obsidian and the like.",
+      "ModeJournal": "Journal entry",
+      "ModeJournalHint": "Creates a journal in this world with one page per day.",
+      "UserColors": "Show user colours",
+      "DiceDetails": "Include dice details (individual results)",
+      "JournalPublic": "Visible to players (Observer)",
+      "JournalNoPermission": "You may not create journal entries.",
+      "JournalDone": "Created journal \"{name}\"."
+    },
+    "Session": {
+      "Label": "Session {number}",
+      "LabelTitled": "Session {number} — {title}",
+      "Speaker": "Session",
+      "StartedMsg": "{label} started",
+      "EndedMsg": "{label} ended",
+      "Started": "{label} started.",
+      "AlreadyActive": "A session is already running.",
+      "EmptyEnded": "The session had no messages, so it ended without saving.",
+      "Number": "Session number",
+      "TitleField": "Session title",
+      "TitlePlaceholder": "optional",
+      "StartHint": "Chat from now on belongs to this session and is archived in one go when you end it.",
+      "StartTitle": "Start Session",
+      "Start": "Start session",
+      "EndTitle": "End Session",
+      "EndAndSave": "End & save session",
+      "Since": "since {time} · {count} messages",
+      "None": "No session running",
+      "Group": "Session logs",
+      "Badge": "Session log"
+    },
+    "Auto": {
+      "Name": "Auto archive {date}",
+      "LoadName": "Auto saved {from} ~ {to}",
+      "Deleting": "Auto archive: clearing saved messages… ({count})",
+      "Done": "Auto archive: {saved} saved, {deleted} cleared from the log",
+      "Badge": "Auto archive"
+    },
+    "Bookmark": {
+      "Add": "Bookmark",
+      "Remove": "Remove bookmark"
+    },
+    "Highlight": {
+      "Add": "Highlight (shown to everyone)",
+      "Remove": "Remove highlight"
+    },
+    "Reorder": {
+      "Up": "Move up",
+      "Down": "Move down",
+      "Duplicate": "Duplicate",
+      "NoNeighbour": "Cannot move further."
+    },
+    "Select": {
+      "Mode": "Select",
+      "ModeHint": "Pick messages to bookmark, export or delete together (Shift+click selects a range)",
+      "One": "Select",
+      "Count": "{count} selected",
+      "All": "Select all results",
+      "Clear": "Clear",
+      "Bookmark": "Bookmark",
+      "Export": "Export",
+      "Delete": "Delete",
+      "Short": "selection",
+      "Bookmarked": "Bookmarked {count} messages.",
+      "NothingDeletable": "None of the selected messages can be deleted.",
+      "DeleteTitle": "Delete Selected Messages",
+      "DeleteConfirm": "Delete {count} selected messages from the chat log? This cannot be undone."
+    },
+    "Files": {
+      "Import": "Import",
+      "ImportTooltip": "Import an archive JSON (also from another world) as a new archive",
+      "ImportInvalid": "Not an archive JSON file.",
+      "ImportEmpty": "There are no messages to import.",
+      "Imported": "Imported \"{name}\" ({count})",
+      "ImportedBadge": "Imported archive",
+      "Merge": "Merge",
+      "MergeTooltip": "Combine several archives into one",
+      "MergeTitle": "Merge Archives",
+      "MergeNeedTwo": "Pick at least two archives to merge.",
+      "MergeNameHint": "Leave empty to join the original names",
+      "MergeRemove": "Remove the originals from the list afterwards",
+      "Merged": "Merged into \"{name}\" ({count})",
+      "MergedBadge": "Merged archive",
+      "Download": "Download JSON",
+      "ClearFile": "Also empty the archive file on the server",
+      "ClearFileHint": "Foundry has no file deletion API, so the file is overwritten with a tiny tombstone to free the space. Delete the empty file from the server folder yourself if you want it gone.",
+      "Cleared": "The file of archive \"{name}\" was emptied and cannot be opened.",
+      "Failed": "Operation failed: {error}"
+    },
+    "Images": {
+      "Button": "Attach image",
+      "Remove": "Remove",
+      "NoPermission": "You don't have file upload permission, so images can't be uploaded. (Settings → Configure Permissions → Upload Files)",
+      "UploadFailed": "Image upload failed: {name}",
+      "Waiting": "Sending once the image upload finishes…",
+      "ChatImagesActive": "Gato's Chat Tools now handles chat images itself. Disable the Chat Images module to switch to it (while it is on, the compatibility patch is used)."
+    },
+    "Whisper": {
+      "Title": "Whisper target",
+      "ButtonTooltip": "Choose whisper target (right-click: public)",
+      "Public": "Public (everyone)",
+      "ToGM": "GM only",
+      "PickUsers": "Chosen players",
+      "ToUsers": "Players: {names}",
+      "PickToken": "Owners of a token",
+      "ToToken": "Owners of {name}",
+      "ToTargeted": "Owners of my targeted tokens",
+      "ToControlled": "Owners of my selected tokens",
+      "AtSendTime": "(at send time)",
+      "OneShot": "Back to public after one message",
+      "OnceTag": "once",
+      "Hint": "Recipients are worked out from ownership at the moment you send. GMs always receive whispers between players. Messages sent with commands such as /w or /r keep their usual behaviour.",
+      "Apply": "Apply",
+      "Clear": "Back to public",
+      "GMOnly": "GM only",
+      "NoOwnerShort": "no player owner",
+      "NoOwners": "{names} has no player owner; sending to the GM only.",
+      "NoUsers": "No players chosen; sending to the GM only.",
+      "TokenGone": "The chosen token no longer exists; sending to the GM only.",
+      "NoTargets": "No targeted tokens; sending to the GM only.",
+      "NoControlled": "No selected tokens; sending to the GM only.",
+      "NoOtherUsers": "There are no other users.",
+      "NoSceneTokens": "No tokens with an actor on the current scene."
+    },
+    "TokenHud": {
+      "Whisper": "Whisper",
+      "Pin": "Use as chat whisper target",
+      "Close": "Close (Esc)",
+      "Send": "Send",
+      "Owners": "Owners: {names}",
+      "Placeholder": "Whisper to {name}'s owners… (Enter to send)",
+      "Pinned": "Chat now whispers to the owners of {name}.",
+      "Me": "{name} (me)",
+      "GMOnly": "No player owner · GM only",
+      "SpeakAs": "Speaks as {name}",
+      "Reply": "Reply to the owners of {name}"
+    }
+  }
+}

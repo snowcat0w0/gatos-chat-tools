@@ -1,0 +1,43 @@
+<div class="gct-edit">
+  {{#if chitchat}}
+  <p class="notes">{{localize "GCT.Edit.ChitchatNote"}}</p>
+  {{else}}
+  <div class="form-group">
+    <label>{{localize "GCT.Edit.Speaker"}}</label>
+    <div class="form-fields">
+      <select name="actorId">
+        <option value="" {{#if noActor}}selected{{/if}}>{{localize "GCT.Edit.NoActor"}}</option>
+        {{#each actors}}
+        <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "GCT.Edit.Alias"}}</label>
+    <div class="form-fields">
+      <input type="text" name="alias" value="{{alias}}" placeholder="{{localize 'GCT.Edit.AliasHint'}}">
+    </div>
+  </div>
+  {{/if}}
+  {{#if isGM}}
+  <div class="form-group">
+    <label>{{localize "GCT.Edit.Timestamp"}}</label>
+    <div class="form-fields">
+      <input type="datetime-local" name="timestamp" step="1" value="{{timestamp}}">
+    </div>
+    <p class="hint">{{localize "GCT.Edit.TimestampHint"}}</p>
+  </div>
+  {{/if}}
+  <div class="form-group">
+    <label>{{localize "GCT.Edit.Flavor"}}</label>
+    <div class="form-fields">
+      <input type="text" name="flavor" value="{{flavor}}">
+    </div>
+  </div>
+  <div class="form-group stacked">
+    <label>{{localize "GCT.Edit.Content"}}</label>
+    <textarea name="content" rows="10" autofocus>{{content}}</textarea>
+    <p class="hint">{{localize "GCT.Edit.ContentHint"}}</p>
+  </div>
+</div>

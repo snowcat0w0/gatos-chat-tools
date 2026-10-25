@@ -1,0 +1,402 @@
+{
+  "GCT": {
+    "Save": "저장",
+    "Cancel": "취소",
+    "Delete": "삭제",
+    "Rename": "이름 변경",
+    "Settings": {
+      "InstantDelete": {
+        "Name": "삭제 버튼 즉시 삭제",
+        "Hint": "채팅 메시지의 쓰레기통 버튼을 누르면 확인 창 없이 바로 삭제합니다."
+      },
+      "PlayerEdit": {
+        "Name": "플레이어 자기 메시지 수정/삭제 허용",
+        "Hint": "플레이어도 자기가 보낸 메시지의 내용·화자를 수정하고 삭제할 수 있습니다. GM은 항상 모든 메시지를 수정할 수 있습니다."
+      },
+      "ShowButtons": {
+        "Name": "메시지에 수정/삭제 버튼 표시",
+        "Hint": "채팅 메시지 머리말에 수정(연필)·삭제(쓰레기통) 버튼을 표시합니다. 끄면 우클릭 메뉴로만 수정할 수 있습니다."
+      },
+      "HideSecret": {
+        "Name": "아카이브에서 플레이어에게 비밀 메시지 숨김",
+        "Hint": "플레이어가 아카이브를 볼 때 자기에게 온 것이 아닌 귓속말과 비공개 굴림을 숨깁니다. GM은 항상 전부 봅니다."
+      },
+      "ShowPortrait": {
+        "Name": "채팅 카드에 포트레잇 표시",
+        "Hint": "채팅 카드 첫 줄(이름 옆)에 화자의 이미지를 표시합니다 (이 클라이언트만 적용). 장면에 토큰이 있으면 토큰 이미지, 없으면 액터 초상화를 쓰며, 메시지가 올라올 때의 이미지를 저장해 두므로 나중에 이미지를 바꿔도 이미 올라온 메시지는 바뀌지 않습니다."
+      },
+      "PortraitSize": {
+        "Name": "포트레잇 크기 (px)",
+        "Hint": "채팅 카드 포트레잇의 한 변 길이입니다."
+      },
+      "PortraitShape": {
+        "Name": "포트레잇 모양",
+        "Hint": "",
+        "Square": "사각형",
+        "Circle": "원형"
+      },
+      "ChitchatTrigger": {
+        "Name": "잡담 시작 문자 (추가)",
+        "Hint": "기본 트리거 '/pt ', '`', '!' 외에 추가로 쓸 접두 문자입니다. 비우면 기본 트리거만 씁니다."
+      },
+      "ChitchatAsOOC": {
+        "Name": "잡담을 OOC 메시지로 생성",
+        "Hint": "켜면 잡담이 OOC 스타일로, 끄면 기타(Other) 스타일로 만들어집니다."
+      },
+      "ChitchatFontSize": {
+        "Name": "잡담 글자 크기 (px)",
+        "Hint": ""
+      },
+      "ChitchatBrightness": {
+        "Name": "잡담 배경 밝기",
+        "Hint": "잡담 배경은 보낸 사용자의 색상입니다. 값이 클수록 흰색에 가까워집니다."
+      },
+      "ChitchatLineBreak": {
+        "Name": "잡담 이름 뒤 줄바꿈",
+        "Hint": "켜면 사용자 이름 다음 줄에 내용을 표시합니다."
+      },
+      "GroupMessages": {
+        "Name": "연속 메시지 묶기",
+        "Hint": "같은 사용자·화자가 연속해서 보낸 메시지를 한 묶음으로 표시합니다 (이어지는 메시지의 이름·포트레잇 생략)."
+      },
+      "GroupChitchat": {
+        "Name": "연속 잡담 묶기",
+        "Hint": "연속된 잡담을 한 묶음으로 표시합니다."
+      },
+      "GroupGap": {
+        "Name": "묶기 최대 간격 (분)",
+        "Hint": "앞 메시지와 이 시간 이상 떨어지면 새 묶음으로 시작합니다. 0이면 제한 없음."
+      },
+      "SpeakerBar": {
+        "Name": "발화자 바 표시",
+        "Hint": "채팅 입력창 위에 지금 어떤 화자로 말하게 될지 표시하고, 화자를 고정하거나 즐겨찾기로 바꿀 수 있습니다."
+      },
+      "SpeakerFavorites": {
+        "Name": "발화자 즐겨찾기 표시",
+        "Hint": "발화자 바에 즐겨찾기 화자 칩 줄을 표시합니다."
+      },
+      "FavoriteChipMode": {
+        "Portrait": "초상화",
+        "Name": "즐겨찾기 칩 표시 방식",
+        "NameChoice": "이름"
+      },
+      "SessionAnnounce": {
+        "Name": "세션 시작/종료를 채팅에 알림",
+        "Hint": "세션을 시작·종료할 때 채팅에 표시 카드를 남깁니다. 아카이브에서 세션 경계를 찾기 쉬워집니다."
+      },
+      "AutoThreshold": {
+        "Name": "자동 아카이브: 채팅 메시지 수 기준",
+        "Hint": "채팅 로그가 이 개수를 넘으면 GM 클라이언트가 '마지막 아카이브 이후' 메시지를 자동 저장하고, 저장된 메시지를 로그에서 정리합니다. 0이면 끔. 세션 진행 중에는 동작하지 않습니다 (세션 종료 때 저장)."
+      },
+      "AutoKeep": {
+        "Name": "자동 아카이브 후 남길 최근 메시지 수",
+        "Hint": "자동 아카이브로 로그를 정리할 때 가장 최근 메시지는 이만큼 남깁니다 (기준 수의 절반을 넘지 않음)."
+      },
+      "AutoOnLoad": {
+        "Name": "GM 접속 시 이전 기록 자동 저장",
+        "Hint": "GM이 접속했을 때 아직 저장되지 않은 메시지가 있고 그 중 가장 최근 것이 3시간 이상 지났으면, 지난 접속의 기록으로 보고 자동으로 아카이브에 저장합니다. (월드 종료 순간은 모듈이 안정적으로 잡을 수 없어 다음 접속 때 처리합니다.)"
+      },
+      "ChatImagesCompat": {
+        "Name": "Chat Images 호환 패치",
+        "Hint": "Chat Images 모듈이 켜져 있을 때 Foundry v13에서 이미지 붙여넣기가 무한로딩되는 문제, 강제로 켜지는 훅 디버그 로그, 큰 스크린샷의 긴 압축 시간을 고칩니다. 끄면 Chat Images 원래 동작으로 돌아갑니다."
+      },
+      "ImageAttach": {
+        "Name": "채팅 이미지 첨부",
+        "Hint": "채팅 입력창에 이미지를 붙여넣기·끌어놓기·버튼으로 첨부해 서버에 올리고 메시지에 넣습니다. 큰 스크린샷은 WebP로 줄여 올립니다. Chat Images 모듈이 켜져 있으면 쉬고, 그 모듈의 호환 패치가 대신 동작합니다."
+      },
+      "ImageUploadFolder": {
+        "Name": "채팅 이미지 업로드 폴더",
+        "Hint": "Data 아래 폴더. 기본값은 Chat Images와 같은 uploaded-chat-images라 기존 이미지와 같은 곳에 쌓입니다."
+      },
+      "ImageUploadButton": {
+        "Name": "이미지 첨부 버튼 표시",
+        "Hint": "채팅 컨트롤에 이미지 버튼을 보여 줍니다(업로드 권한이 있을 때만)."
+      },
+      "TokenHud": {
+        "Name": "토큰 클릭 시 상단 귓속말 메뉴",
+        "Hint": "토큰을 클릭하면 화면 위쪽에 반투명 메뉴가 떠서 그 토큰의 소유자에게 바로 귓속말을 보낼 수 있습니다. 나 말고 다른 플레이어 소유자가 있는 토큰, 그리고 (플레이어라면) 자기 지정 PC가 아닌 토큰에 뜹니다. 은닉 진행처럼 여러 명이 같은 토큰을 소유하면 그 토큰으로 서로 귓속말을 주고받을 수 있습니다 (이 클라이언트만 적용)."
+      }
+    },
+    "Edit": {
+      "Title": "메시지 수정",
+      "Speaker": "화자(액터)",
+      "NoActor": "액터 없음 (사용자 이름으로 표시)",
+      "Alias": "표시 이름",
+      "AliasHint": "비우면 액터 이름(또는 사용자 이름)을 씁니다",
+      "Flavor": "플레이버 텍스트",
+      "Content": "내용 (HTML)",
+      "ContentHint": "메시지 본문을 HTML 그대로 수정합니다. 일반 글은 그냥 글자만 고치면 됩니다. 루비(후리가나)는 [[기본 글자|읽기]] 로 적습니다.",
+      "Saved": "메시지를 수정했습니다.",
+      "NoPermission": "이 메시지를 수정할 권한이 없습니다.",
+      "ChitchatNote": "잡담은 항상 보낸 플레이어 이름으로 표시되며 화자를 바꿀 수 없습니다.",
+      "Timestamp": "보낸 시각",
+      "TimestampHint": "GM 전용. 바꾸면 메시지가 그 시각 위치로 이동합니다 (모든 사용자 화면에 반영)."
+    },
+    "Chat": {
+      "OpenViewer": "채팅 아카이브 / 검색",
+      "DeleteNow": "메시지 삭제"
+    },
+    "Archive": {
+      "SaveNew": "현재 채팅 아카이브 저장",
+      "SaveTitle": "채팅 아카이브 저장",
+      "Name": "아카이브 이름",
+      "Range": "저장 범위",
+      "RangeAll": "전체",
+      "RangeSinceLast": "마지막 아카이브 이후 ({date})",
+      "RangeToday": "오늘",
+      "Range7": "최근 7일",
+      "Range30": "최근 30일",
+      "RangeCustom": "직접 지정",
+      "CustomDates": "날짜 (시작 ~ 끝)",
+      "Preview": "대상 메시지: {count}개",
+      "DeleteAfter": "저장 후 채팅 로그에서 삭제",
+      "DeleteAfterHint": "저장한 메시지를 채팅 로그에서 지웁니다. 아카이브 파일은 그대로 남습니다.",
+      "NoMessages": "저장할 메시지가 없습니다.",
+      "Saving": "채팅 아카이브 저장 중… ({count}개)",
+      "Saved": "아카이브 \"{name}\" 저장 완료 ({count}개)",
+      "Deleting": "채팅 로그에서 삭제 중…",
+      "SaveFailed": "아카이브 저장에 실패했습니다: {error}",
+      "LoadFailed": "아카이브 파일을 불러오지 못했습니다: {path}",
+      "DeleteConfirmTitle": "아카이브 삭제",
+      "DeleteConfirm": "아카이브 \"{name}\"을(를) 목록에서 삭제할까요? 파일({path})은 서버에 그대로 남습니다.",
+      "RenameTitle": "아카이브 이름 변경",
+      "GMOnly": "GM만 아카이브를 저장할 수 있습니다.",
+      "DefaultName": "{world} {date}"
+    },
+    "Viewer": {
+      "Title": "채팅 아카이브",
+      "Live": "현재 채팅 로그",
+      "Search": "검색 (내용·화자·플레이버)",
+      "AllSpeakers": "모든 화자",
+      "From": "시작",
+      "To": "끝",
+      "Count": "{shown} / {total}개",
+      "ExportTooltip": "지금 보이는(필터된) 메시지를 TXT / HTML / ZIP / 폴더로 내보내거나 새 창에서 봅니다",
+      "LoadMore": "더 보기",
+      "Empty": "메시지가 없습니다.",
+      "JumpTo": "채팅창에서 보기",
+      "NoArchives": "저장된 아카이브가 없습니다.",
+      "Whisper": "귓속말",
+      "Blind": "비공개",
+      "Loading": "불러오는 중…",
+      "NothingToExport": "내보낼 메시지가 없습니다.",
+      "IncludeChitchat": "잡담",
+      "IncludeChitchatHint": "잡담 메시지를 목록에 포함합니다 (내보내기에도 적용)",
+      "Export": "내보내기",
+      "AllUsers": "모든 사용자",
+      "OtherArchives": "아카이브",
+      "RegexHint": "정규식으로 검색 (대소문자 무시)",
+      "PrevMatch": "이전 일치 (Shift+Enter)",
+      "NextMatch": "다음 일치 (Enter)",
+      "Kind": {
+        "all": "모든 종류",
+        "rolls": "굴림",
+        "whispers": "귓속말·비공개",
+        "chitchat": "잡담",
+        "bookmarks": "내 북마크",
+        "highlights": "하이라이트",
+        "markers": "세션 표시"
+      }
+    },
+    "Export": {
+      "Title": "{world} 채팅 기록",
+      "Period": "기간",
+      "Messages": "메시지",
+      "ExportedAt": "내보낸 시각",
+      "Source": "출처",
+      "Count": "{count}개",
+      "Dice": "주사위"
+    },
+    "DeleteRange": {
+      "Title": "채팅 메시지 삭제",
+      "Button": "날짜로 메시지 삭제",
+      "Range": "삭제 범위",
+      "RangeArchived": "마지막 아카이브까지 ({date} 이전)",
+      "Hint": "선택한 범위의 현재 채팅 메시지를 지웁니다. 아카이브로 저장하지 않은 메시지도 함께 사라지며 되돌릴 수 없습니다.",
+      "Preview": "삭제될 메시지: {count}개",
+      "Confirm": "메시지 {count}개를 삭제할까요? 되돌릴 수 없습니다.",
+      "Done": "메시지 {count}개를 삭제했습니다.",
+      "NoMessages": "삭제할 메시지가 없습니다.",
+      "Deleting": "메시지 삭제 중… ({count}개)"
+    },
+    "Chitchat": {
+      "Label": "잡담"
+    },
+    "SpeakerBar": {
+      "LockTooltip": "발화자 고정 / 해제",
+      "ResetTooltip": "기본 발화자로 (고정 해제)",
+      "AddTooltip": "현재 발화자를 즐겨찾기에 추가",
+      "Locked": "'{name}'(으)로 발화자를 고정했습니다.",
+      "Unlocked": "발화자 고정을 해제했습니다.",
+      "NothingToLock": "고정할 화자가 없습니다. 토큰을 선택하거나 캐릭터를 배정하세요.",
+      "FavDuplicate": "이미 즐겨찾기에 있는 발화자입니다.",
+      "FavFull": "즐겨찾기가 가득 찼습니다 (최대 12개)."
+    },
+    "ExportDialog": {
+      "Title": "채팅 로그 내보내기",
+      "Format": "형식",
+      "Options": "포함 내용",
+      "ModeTxt": "TXT 파일",
+      "ModeTxtHint": "읽기 쉬운 순수 텍스트. 이미지·서식은 없습니다.",
+      "ModeHtml": "HTML 단일 파일",
+      "ModeHtmlHint": "CSS와 이미지(포트레잇 포함)를 파일 하나에 내장합니다. 어디서나 바로 열립니다.",
+      "ModeZip": "ZIP 파일",
+      "ModeZipHint": "HTML + chat-styles.css + images/ + portraits/ 폴더 구조를 zip으로 받습니다. 여러 회차를 같은 폴더에 풀어 두면 CSS와 이미지를 공유합니다.",
+      "ModeDir": "폴더에 저장",
+      "ModeDirHint": "처음 한 번 폴더를 고르면 이후에는 그 폴더에 HTML·CSS·이미지를 바로 씁니다 (Chrome·Edge·Foundry 앱 전용).",
+      "ModeWindow": "새 창에서 보기",
+      "ModeWindowHint": "파일을 만들지 않고 브라우저 새 창에 로그를 표시합니다.",
+      "IncludeChitchat": "잡담 포함",
+      "IncludeWhispers": "귓속말·비공개 메시지 포함",
+      "IncludePortraits": "포트레잇 포함",
+      "NoneInSet": "해당 없음",
+      "Summary": "내보낼 메시지: {count}개",
+      "Run": "내보내기",
+      "Working": "채팅 로그 생성 중…",
+      "Done": "내보내기 완료",
+      "DirDone": "'{name}' 폴더에 저장했습니다.",
+      "DirUnsupported": "이 브라우저는 폴더 저장을 지원하지 않습니다.",
+      "DirResetLink": "기억된 저장 폴더 초기화",
+      "DirReset": "저장 폴더 선택을 지웠습니다. 다음 저장 때 다시 고릅니다.",
+      "PopupBlocked": "팝업이 차단되었습니다. 팝업 차단을 해제한 뒤 다시 시도하세요.",
+      "Failed": "내보내기에 실패했습니다: {error}",
+      "ModeMd": "Markdown 파일",
+      "ModeMdHint": "디스코드·노션·옵시디언 등에 붙여 넣기 좋은 .md 텍스트입니다.",
+      "ModeJournal": "저널 엔트리",
+      "ModeJournalHint": "월드 안에 저널을 만들고 날짜별 페이지로 로그를 넣습니다.",
+      "UserColors": "사용자 색상 표시",
+      "DiceDetails": "주사위 상세(개별 눈) 포함",
+      "JournalPublic": "플레이어에게 공개 (관찰자 권한)",
+      "JournalNoPermission": "저널을 만들 권한이 없습니다.",
+      "JournalDone": "저널 \"{name}\"을(를) 만들었습니다."
+    },
+    "Session": {
+      "Label": "제{number}회",
+      "LabelTitled": "제{number}회 「{title}」",
+      "Speaker": "세션",
+      "StartedMsg": "{label} 시작",
+      "EndedMsg": "{label} 종료",
+      "Started": "{label}을(를) 시작했습니다.",
+      "AlreadyActive": "이미 진행 중인 세션이 있습니다.",
+      "EmptyEnded": "세션 동안 메시지가 없어 저장하지 않고 종료했습니다.",
+      "Number": "세션 번호",
+      "TitleField": "세션 제목",
+      "TitlePlaceholder": "비워도 됩니다",
+      "StartHint": "세션을 시작하면 지금부터의 채팅이 이 세션으로 묶이고, 종료할 때 한 번에 아카이브로 저장됩니다.",
+      "StartTitle": "세션 시작",
+      "Start": "세션 시작",
+      "EndTitle": "세션 종료",
+      "EndAndSave": "세션 종료·저장",
+      "Since": "{time}부터 · 메시지 {count}개",
+      "None": "진행 중인 세션 없음",
+      "Group": "세션 로그",
+      "Badge": "세션 로그"
+    },
+    "Auto": {
+      "Name": "자동 아카이브 {date}",
+      "LoadName": "자동 저장 {from} ~ {to}",
+      "Deleting": "자동 아카이브: 저장된 메시지 정리 중… ({count}개)",
+      "Done": "자동 아카이브: {saved}개 저장, {deleted}개 로그에서 정리",
+      "Badge": "자동 아카이브"
+    },
+    "Bookmark": {
+      "Add": "북마크",
+      "Remove": "북마크 해제"
+    },
+    "Highlight": {
+      "Add": "하이라이트 (모두에게 표시)",
+      "Remove": "하이라이트 해제"
+    },
+    "Reorder": {
+      "Up": "위로 이동",
+      "Down": "아래로 이동",
+      "Duplicate": "복제",
+      "NoNeighbour": "더 이동할 수 없습니다."
+    },
+    "Select": {
+      "Mode": "선택",
+      "ModeHint": "메시지를 골라 한꺼번에 북마크·내보내기·삭제합니다 (Shift+클릭으로 범위 선택)",
+      "One": "선택",
+      "Count": "{count}개 선택",
+      "All": "결과 전체 선택",
+      "Clear": "선택 해제",
+      "Bookmark": "북마크",
+      "Export": "내보내기",
+      "Delete": "삭제",
+      "Short": "선택",
+      "Bookmarked": "{count}개를 북마크했습니다.",
+      "NothingDeletable": "삭제할 수 있는 메시지가 없습니다.",
+      "DeleteTitle": "선택한 메시지 삭제",
+      "DeleteConfirm": "선택한 메시지 {count}개를 채팅 로그에서 삭제할까요? 되돌릴 수 없습니다."
+    },
+    "Files": {
+      "Import": "가져오기",
+      "ImportTooltip": "아카이브 JSON 파일(다른 월드에서 받은 것 포함)을 새 아카이브로 가져옵니다",
+      "ImportInvalid": "아카이브 JSON 형식이 아닙니다.",
+      "ImportEmpty": "가져올 메시지가 없습니다.",
+      "Imported": "\"{name}\" 가져옴 ({count}개)",
+      "ImportedBadge": "가져온 아카이브",
+      "Merge": "병합",
+      "MergeTooltip": "여러 아카이브를 하나로 합칩니다",
+      "MergeTitle": "아카이브 병합",
+      "MergeNeedTwo": "병합하려면 아카이브를 두 개 이상 고르세요.",
+      "MergeNameHint": "비우면 원래 이름을 이어 붙입니다",
+      "MergeRemove": "병합 후 원본을 목록에서 제거",
+      "Merged": "\"{name}\"(으)로 병합했습니다 ({count}개)",
+      "MergedBadge": "병합된 아카이브",
+      "Download": "JSON 받기",
+      "ClearFile": "서버의 아카이브 파일 내용도 비우기",
+      "ClearFileHint": "Foundry에는 파일 삭제 기능이 없어, 파일을 작은 빈 표식으로 덮어써 용량만 비웁니다. 빈 파일을 지우려면 서버 폴더에서 직접 지우세요.",
+      "Cleared": "아카이브 \"{name}\"의 파일 내용이 비워져 열 수 없습니다.",
+      "Failed": "작업에 실패했습니다: {error}"
+    },
+    "Images": {
+      "Button": "이미지 첨부",
+      "Remove": "빼기",
+      "NoPermission": "파일 업로드 권한이 없어 이미지를 올릴 수 없습니다. (설정 → 권한 구성 → 파일 업로드)",
+      "UploadFailed": "이미지 업로드 실패: {name}",
+      "Waiting": "이미지 업로드가 끝나면 전송합니다…",
+      "ChatImagesActive": "Gato's Chat Tools가 이미지 붙여넣기를 직접 지원합니다. Chat Images 모듈을 끄면 Chat Tools 쪽 기능이 켜집니다(켜 둔 동안은 호환 패치로 동작)."
+    },
+    "Whisper": {
+      "Title": "귓속말 대상",
+      "ButtonTooltip": "귓속말 대상 지정 (우클릭: 공개로)",
+      "Public": "공개 (전체)",
+      "ToGM": "GM에게만",
+      "PickUsers": "플레이어 지정",
+      "ToUsers": "플레이어: {names}",
+      "PickToken": "특정 토큰의 소유자",
+      "ToToken": "{name} 소유자",
+      "ToTargeted": "내가 타겟한 토큰의 소유자",
+      "ToControlled": "선택한 토큰의 소유자",
+      "AtSendTime": "(보낼 때 기준)",
+      "OneShot": "한 번 보낸 뒤 공개로 되돌리기",
+      "OnceTag": "1회",
+      "Hint": "보내는 순간의 소유권으로 받는 사람이 정해집니다. 플레이어끼리의 귓속말은 GM도 항상 함께 받습니다. /w·/r 같은 명령어로 보낸 메시지는 이 설정과 상관없이 원래대로 동작합니다.",
+      "Apply": "적용",
+      "Clear": "공개로 되돌리기",
+      "GMOnly": "GM만",
+      "NoOwnerShort": "플레이어 소유자 없음",
+      "NoOwners": "{names}에 플레이어 소유자가 없어 GM에게만 보냅니다.",
+      "NoUsers": "지정한 플레이어가 없어 GM에게만 보냅니다.",
+      "TokenGone": "지정한 토큰이 없어져 GM에게만 보냅니다.",
+      "NoTargets": "타겟한 토큰이 없어 GM에게만 보냅니다.",
+      "NoControlled": "선택한 토큰이 없어 GM에게만 보냅니다.",
+      "NoOtherUsers": "다른 사용자가 없습니다.",
+      "NoSceneTokens": "현재 장면에 액터가 연결된 토큰이 없습니다."
+    },
+    "TokenHud": {
+      "Whisper": "귓속말 보내기",
+      "Pin": "채팅 귓속말 대상으로 고정",
+      "Close": "닫기 (Esc)",
+      "Send": "보내기",
+      "Owners": "소유자: {names}",
+      "Placeholder": "{name} 소유자에게 귓속말… (Enter로 보내기)",
+      "Pinned": "이제 채팅이 {name} 소유자에게 귓속말로 갑니다.",
+      "Me": "{name}(나)",
+      "GMOnly": "플레이어 소유자 없음 · GM에게만",
+      "SpeakAs": "{name}(으)로 말합니다",
+      "Reply": "{name} 소유자에게 답장"
+    }
+  }
+}

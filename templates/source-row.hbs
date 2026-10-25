@@ -1,0 +1,11 @@
+<li class="gct-source {{#if active}}active{{/if}}" data-action="selectSource" data-source="{{id}}">
+  <div class="name" title="{{name}}">{{#if badge}}<span class="gct-badge" data-tooltip="{{badgeTip}}">{{badge}}</span>{{else}}<i class="fa-solid fa-box-archive"></i>{{/if}} {{name}}</div>
+  <div class="meta">{{range}} · {{count}}</div>
+  <div class="gct-source-actions">
+    <a data-action="downloadArchive" data-id="{{id}}" data-tooltip="{{localize 'GCT.Files.Download'}}"><i class="fa-solid fa-download"></i></a>
+    {{#if isGM}}
+    <a data-action="renameArchive" data-id="{{id}}" data-tooltip="{{localize 'GCT.Rename'}}"><i class="fa-solid fa-pen"></i></a>
+    <a data-action="deleteArchive" data-id="{{id}}" data-tooltip="{{localize 'GCT.Delete'}}"><i class="fa-solid fa-trash"></i></a>
+    {{/if}}
+  </div>
+</li>

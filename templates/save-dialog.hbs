@@ -1,0 +1,33 @@
+<div class="gct-save">
+  <div class="form-group">
+    <label>{{localize "GCT.Archive.Name"}}</label>
+    <div class="form-fields"><input type="text" name="name" value="{{name}}"></div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "GCT.Archive.Range"}}</label>
+    <div class="form-fields">
+      <select name="range">
+        {{#if hasLast}}<option value="sinceLast" selected>{{localize "GCT.Archive.RangeSinceLast" date=lastDate}}</option>{{/if}}
+        <option value="all">{{localize "GCT.Archive.RangeAll"}}</option>
+        <option value="today">{{localize "GCT.Archive.RangeToday"}}</option>
+        <option value="7">{{localize "GCT.Archive.Range7"}}</option>
+        <option value="30">{{localize "GCT.Archive.Range30"}}</option>
+        <option value="custom">{{localize "GCT.Archive.RangeCustom"}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group gct-custom-range" hidden>
+    <label>{{localize "GCT.Archive.CustomDates"}}</label>
+    <div class="form-fields">
+      <input type="date" name="from" value="{{today}}">
+      <span>~</span>
+      <input type="date" name="to" value="{{today}}">
+    </div>
+  </div>
+  <p class="gct-preview notes">{{{localize "GCT.Archive.Preview" count="<strong class='gct-preview-count'>0</strong>"}}}</p>
+  <div class="form-group">
+    <label>{{localize "GCT.Archive.DeleteAfter"}}</label>
+    <div class="form-fields"><input type="checkbox" name="deleteAfter"></div>
+    <p class="hint">{{localize "GCT.Archive.DeleteAfterHint"}}</p>
+  </div>
+</div>
