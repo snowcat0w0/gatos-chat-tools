@@ -1,4 +1,4 @@
-import { MODULE_ID, mod } from "./constants.js";
+import { MODULE_ID, mod, isNote } from "./constants.js";
 import { setting } from "./settings.js";
 import { htmlRoot, providerRegistry } from "./lib.js";
 
@@ -63,6 +63,7 @@ export function portraitFor(message) {
 /** preCreateChatMessage hook: freeze the speaker's current images onto the message. */
 export function onPreCreateChatMessage(message, data, options) {
   if (options?.gctDuplicate) return; // a duplicate keeps the original's frozen portrait
+  if (isNote(message)) return; // notes never show a portrait
   const { token, actor } = lookupPortrait(message.speaker);
   if (token || actor) message.updateSource({ [mod.flagKey("portrait")]: { token, actor } });
 }
@@ -105,15 +106,40 @@ export function applyPortrait(message, li) {
   header.prepend(el);
 }
 
-/** renderChatMessageHTML hook. */
-export function onRenderChatMessagePortrait(message, html) {
-  applyPortrait(message, htmlRoot(html));
+/**
+ * Show the player's (user) name under the character name when the card is spoken as somebody else, e.g.
+ * "Goblin" with "Alice" below. Compared with the name the card actually shows, so OOC cards (which show the
+ * author) never repeat it. Not on chitchat (always the player's name), notes or session markers.
+ */
+export function applyPlayerName(message, li) {
+  if (!(li instanceof HTMLElement) || !message) return;
+  const sender = li.querySelector(":scope > .message-header .message-sender");
+  sender?.querySelector(":scope > .gct-player-name")?.remove();
+  li.classList.remove("gct-has-player");
+  if (!sender || !setting("showPlayerName")) return;
+  if (message.flags?.[MODULE_ID]?.chitchat || message.flags?.[MODULE_ID]?.sessionMarker || isNote(message)) return;
+  const name = message.author?.name;
+  if (!name || sender.textContent.trim() === name) return;
+  const span = document.createElement("span");
+  span.className = "gct-player-name";
+  span.textContent = name;
+  sender.append(span);
+  li.classList.add("gct-has-player");
 }
 
-/** Re-apply portraits to every chat message currently in the DOM (used when display settings change). */
+/** renderChatMessageHTML hook. */
+export function onRenderChatMessagePortrait(message, html) {
+  const li = htmlRoot(html);
+  applyPortrait(message, li);
+  applyPlayerName(message, li);
+}
+
+/** Re-apply portraits and player names to every chat message currently in the DOM (used when display settings change). */
 export function refreshPortraits() {
   for (const li of document.querySelectorAll(".chat-message[data-message-id]")) {
     const message = game.messages.get(li.dataset.messageId);
-    if (message) applyPortrait(message, li);
+    if (!message) continue;
+    applyPortrait(message, li);
+    applyPlayerName(message, li);
   }
 }

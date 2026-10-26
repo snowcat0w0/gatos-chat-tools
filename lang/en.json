@@ -137,6 +137,42 @@
       "TokenHud": {
         "Name": "Whisper menu when clicking a token",
         "Hint": "Clicking a token shows a translucent menu at the top of the screen for whispering straight to that token's owners. Appears for tokens with a player owner other than you and, for players, for any token that is not their assigned character. When several users share a token (covert play) they can whisper to each other through it (this client only)."
+      },
+      "ChatFontFamily": {
+        "Name": "Chat font",
+        "Hint": "Font for chat messages and the chat input (your account only). Pick from Foundry's fonts and the Korean web fonts. Text styled with {@style …} keeps that style's font.",
+        "Default": "Default (system font)"
+      },
+      "ShowPlayerName": {
+        "Name": "Show the player's name under the character name",
+        "Hint": "On messages spoken as a character, show the sending user's name below when it differs from the shown name (this client only). Not on chitchat."
+      },
+      "GroupRolls": {
+        "Name": "Group roll messages too",
+        "Hint": "When off, messages containing dice rolls never group with the messages around them."
+      },
+      "TypingIndicator": {
+        "Name": "Typing indicator",
+        "Hint": "Shows \"A is typing\" right above the chat input while someone writes a public message. Whispers, commands such as /w and private message modes are not announced. Yields to the typing indicator of coc7-ko or Cautious Gamemaster's Pack when one of those is on."
+      },
+      "TypingShowGM": {
+        "Name": "Announce GMs typing",
+        "Hint": "When on, GMs are announced while typing as well. When off, GMs never announce."
+      },
+      "FontStylesMenu": {
+        "Name": "Font styles",
+        "Label": "Manage font styles",
+        "Hint": "Create and edit the font styles (font, size, colour, bold, italic) used in chat as {@name text}. Only the GM edits them; everybody can use them."
+      },
+      "KoreanWebFonts": {
+        "Name": "Load Korean web fonts",
+        "Hint": "Loads free (OFL) Korean web fonts such as Nanum Myeongjo, Nanum Pen Script, Gowun Batang, Do Hyeon and Jua from Google Fonts for every client. They appear in the font style and chat font lists. Turn off for offline games."
+      },
+      "WhisperPanelPolicy": {
+        "Name": "Whisper panel: partners players may pick",
+        "Hint": "Who players can start a conversation with in the whisper panel. GMs can always whisper anybody.",
+        "All": "Everybody",
+        "Gm": "GMs only"
       }
     },
     "Edit": {
@@ -419,6 +455,75 @@
       "GMOnly": "No player owner · GM only",
       "SpeakAs": "Speaks as {name}",
       "Reply": "Reply to the owners of {name}"
+    },
+    "Typing": {
+      "One": "{name} is typing",
+      "Some": "{names} and {last} are typing",
+      "Many": "Several people are typing"
+    },
+    "FontStyle": {
+      "ButtonTooltip": "Insert a font style",
+      "MenuTitle": "Font styles",
+      "MenuHint": "Wraps the selected text. With nothing selected, inserts {@name } with the caret inside.",
+      "Sample": "Aa 가나다 123",
+      "Empty": "No font styles yet. The GM can create some in the settings.",
+      "EmptyGM": "No font styles yet. Create some with 'Manage styles' below.",
+      "Manage": "Manage styles…",
+      "Unknown": "Unknown font style, left as written: {names}",
+      "OneLine": "A font style must stay within one line.",
+      "NoBraces": "Text inside a font style cannot contain { or }.",
+      "GMOnly": "Only a GM can change font styles.",
+      "ConfigTitle": "Manage font styles",
+      "ConfigHint": "Writing {@name text} in chat shows only that text in the style. Names use letters, digits, _ and - only, without spaces, and must be unique. Leave size or colour empty to keep the chat's own.",
+      "None": "No styles. Press 'Add' to create one.",
+      "Add": "Add",
+      "NamePlaceholder": "Name (e.g. whisper)",
+      "CustomPlaceholder": "CSS font family (e.g. Gugi, cursive)",
+      "FamilyInherit": "Keep font",
+      "FamilyCustom": "Custom…",
+      "FoundryFonts": "Foundry fonts",
+      "KoreanFonts": "Korean web fonts",
+      "Size": "Size (px, empty = unchanged)",
+      "Color": "Text colour (applies when checked)",
+      "Bold": "Bold",
+      "Italic": "Italic",
+      "MoveUp": "Move up",
+      "MoveDown": "Move down",
+      "InvalidNames": "A name is empty, uses characters that are not allowed, or is used twice (red rows).",
+      "Saved": "Saved {count} font styles."
+    },
+    "Panel": {
+      "ComposeHint": "Enter: send · Shift+Enter: new line"
+    },
+    "Notes": {
+      "Title": "Shared notes",
+      "Placeholder": "Leave a note everybody can read…",
+      "Send": "Add note",
+      "Empty": "No notes yet.",
+      "Edit": "Edit note (right-click works too)",
+      "EditTitle": "Edit note",
+      "NoPermission": "You can only edit your own notes.",
+      "SendFailed": "Could not add the note: {error}",
+      "EditFailed": "Could not change the note: {error}",
+      "ExportJournal": "Export to a journal",
+      "CopyText": "Copy as text",
+      "Copied": "Notes copied to the clipboard.",
+      "NoJournalPermission": "You are not allowed to create journal entries.",
+      "JournalName": "Shared notes {date}",
+      "Exported": "Created the journal \"{name}\".",
+      "ExportFailed": "Could not export to a journal: {error}"
+    },
+    "WhisperPanel": {
+      "Title": "Whisper conversations",
+      "All": "All",
+      "NewConversation": "New conversation",
+      "LoadOlder": "Load older messages",
+      "Empty": "No whispers.",
+      "Send": "Send whisper",
+      "Placeholder": "Whisper to {name}…",
+      "PickPartner": "Pick a partner tab or start a 'New conversation'.",
+      "NotAllowed": "You cannot whisper {name} from this panel (world setting).",
+      "SendFailed": "Could not send the whisper: {error}"
     }
   }
 }

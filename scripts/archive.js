@@ -1,4 +1,4 @@
-import { MODULE_ID, L, mod, startOfDay, endOfDay } from "./constants.js";
+import { MODULE_ID, L, mod, isNote, startOfDay, endOfDay } from "./constants.js";
 import { cacheBust, download, safeFilename, settingStore, uploadJson } from "./lib.js";
 import { setting } from "./settings.js";
 import { portraitFor } from "./portrait.js";
@@ -54,11 +54,21 @@ export function resolveRange(range, fromTs = null, toTs = null) {
   }
 }
 
-/** All chat messages (sorted oldest first) within the range. */
+/**
+ * All chat messages (sorted oldest first) within the range. Shared notes (notes.js) are not chat messages for
+ * the archive: they are never saved, exported, counted or deleted with a range.
+ */
 export function collectMessages({ from = null, to = null } = {}) {
   return game.messages.contents
-    .filter((m) => (from == null || m.timestamp >= from) && (to == null || m.timestamp <= to))
+    .filter((m) => !isNote(m) && (from == null || m.timestamp >= from) && (to == null || m.timestamp <= to))
     .sort((a, b) => a.timestamp - b.timestamp);
+}
+
+/** Number of messages in the live chat log, notes excluded. */
+export function liveMessageCount() {
+  let n = 0;
+  for (const m of game.messages) if (!isNote(m)) n++;
+  return n;
 }
 
 /** Render the message's HTML and return the inner HTML of its content block (gatos-lib chat, ported from here). */

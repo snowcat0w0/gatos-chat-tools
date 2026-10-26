@@ -4,6 +4,8 @@ import { setting } from "./settings.js";
 import { portraitFlagUpdate } from "./portrait.js";
 import { isChitchat } from "./chitchat.js";
 import { markupToRuby, rubyToMarkup } from "./ruby.js";
+import { fontStylesToMarkup } from "./font-styles-markup.js";
+import { convertFontStyles } from "./font-styles.js";
 import { toLocalInput, setMessageTimestamp } from "./reorder.js";
 
 /** Can the current user edit this message (content / speaker / flavor)? */
@@ -110,7 +112,7 @@ export async function openEditDialog(message) {
     chitchat,
     isGM: game.user.isGM,
     timestamp: toLocalInput(message.timestamp),
-    content: rubyToMarkup(message.content ?? ""),
+    content: rubyToMarkup(fontStylesToMarkup(message.content ?? "")),
     flavor: message.flavor ?? "",
     alias,
     noActor: !currentActorId,
@@ -130,7 +132,8 @@ export async function openEditDialog(message) {
   if (!result) return;
 
   const update = {};
-  const newContent = markupToRuby(result.content ?? "");
+  // Same conversions as on creation; unknown style names stay as markup (preUpdateChatMessage warns about them).
+  const newContent = markupToRuby(convertFontStyles(result.content ?? "").html);
   if (newContent !== (message.content ?? "")) update.content = newContent;
   const newFlavor = (result.flavor ?? "").trim();
   if (newFlavor !== (message.flavor ?? "")) update.flavor = newFlavor;

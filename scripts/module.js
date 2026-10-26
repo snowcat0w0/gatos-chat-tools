@@ -20,6 +20,14 @@ import { registerImageHooks, imagesApi } from "./images.js";
 import { onChatMessageWhisper, registerWhisperHooks, getWhisperTarget, setWhisperTarget, clearWhisperTarget, openWhisperDialog, resolveRecipients, tokenOwners, sendWithTarget } from "./whisper.js";
 import { registerTokenHudHooks, showTokenHud, hideTokenHud } from "./token-hud.js";
 import { registerSpeakerBarHooks, onPreCreateChatMessage as onPreCreateSpeakerOverride, resolveCurrentSpeaker, getLockedSpeaker, updateSpeakerBar } from "./speaker-bar.js";
+import { socket } from "./socket.js";
+import { registerChatInputCapture } from "./chat-input.js";
+import { registerTypingHooks, typingApi } from "./typing.js";
+import { onPreCreateChatMessageFontStyle, onPreUpdateChatMessageFontStyle, injectFontStyleButton, fontStylesApi } from "./font-styles.js";
+import { applyKoreanWebFonts } from "./fonts.js";
+import { populateFontFamilyChoices } from "./chat-theme.js";
+import { NotesPanel, onRenderChatMessageNote, injectNotesButton, registerNotesHooks, createNote, getNotes, notesAsText, exportNotesToJournal } from "./notes.js";
+import { WhisperPanel, injectWhisperPanelButton, registerWhisperPanelHooks, sendWhisperTo } from "./whisper-panel.js";
 
 Hooks.once("init", () => {
   // Installed-but-disabled library = "half state" (gatos-lib PLAN §5.6): code imports fine, but the library's
@@ -34,12 +42,31 @@ Hooks.once("init", () => {
   mod.preloadTemplates(Object.values(TEMPLATES), PARTIALS);
   applyChitchatCssVars();
   applyChatTheme();
+  applyKoreanWebFonts();
 
   game.keybindings.register(MODULE_ID, "openWhisper", {
     name: "GCT.Whisper.Title",
     editable: [],
     onDown: () => {
       openWhisperDialog();
+      return true;
+    },
+  });
+
+  game.keybindings.register(MODULE_ID, "openNotes", {
+    name: "GCT.Notes.Title",
+    editable: [],
+    onDown: () => {
+      NotesPanel.toggle();
+      return true;
+    },
+  });
+
+  game.keybindings.register(MODULE_ID, "openWhispers", {
+    name: "GCT.WhisperPanel.Title",
+    editable: [],
+    onDown: () => {
+      WhisperPanel.toggle();
       return true;
     },
   });
@@ -127,9 +154,27 @@ Hooks.once("init", () => {
     // extension: extra viewer buttons
     registerViewerAction,
     // whisper targets
-    whisper: { getWhisperTarget, setWhisperTarget, clearWhisperTarget, openWhisperDialog, resolveRecipients, tokenOwners, sendWithTarget, showTokenHud, hideTokenHud },
+    whisper: { getWhisperTarget, setWhisperTarget, clearWhisperTarget, openWhisperDialog, resolveRecipients, tokenOwners, sendWithTarget, showTokenHud, hideTokenHud, sendWhisperTo },
+    // typing indicator console helpers: typing.status(), typing.test()
+    typing: typingApi,
+    // inline font styles {@name text}
+    fontStyles: fontStylesApi,
+    // floating panels
+    panels: {
+      notes: () => NotesPanel.open(),
+      whispers: (userId = null) => WhisperPanel.openTo(userId),
+    },
+    notes: { create: createNote, list: getNotes, asText: notesAsText, exportJournal: exportNotesToJournal },
   });
 });
+
+Hooks.once("ready", () => {
+  socket.init();
+  populateFontFamilyChoices(); // Foundry's fonts are loaded by now
+});
+
+// Chat input editor capture (createProseMirrorEditor), before the chat log builds its input.
+registerChatInputCapture();
 
 // Message creation: speaker lock first, then freeze the portrait of the final speaker.
 registerChatImagesCompat();
@@ -141,10 +186,13 @@ registerWhisperHooks();
 registerTokenHudHooks();
 Hooks.on("preCreateChatMessage", onPreCreateSpeakerOverride);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessage);
+Hooks.on("preCreateChatMessage", onPreCreateChatMessageFontStyle);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageRuby);
+Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageFontStyle);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageRuby);
 
-// Message rendering: chitchat markup, portrait, edit/delete buttons, then grouping once inserted.
+// Message rendering: notes hidden first, chitchat markup, portrait, edit/delete buttons, then grouping once inserted.
+Hooks.on("renderChatMessageHTML", onRenderChatMessageNote);
 Hooks.on("renderChatMessageHTML", onRenderChatMessageChitchat);
 Hooks.on("renderChatMessageHTML", onRenderChatMessagePortrait);
 Hooks.on("renderChatMessageHTML", onRenderChatMessageHTML);
@@ -169,12 +217,25 @@ Hooks.on("gctBookmarksChanged", onBookmarksChanged);
 // The user's bookmark flag changed from elsewhere (another window, the chat context menu).
 bookmarkStore.watch(() => onBookmarksChanged());
 // renderChatInput + renderChatLog, in that order (no collapseSidebar: the input re-renders anyway).
-onChatUiRender(() => injectChatButton(), { deferCollapse: false });
+onChatUiRender(
+  () => {
+    injectChatButton();
+    injectNotesButton();
+    injectWhisperPanelButton();
+    injectFontStyleButton();
+  },
+  { deferCollapse: false }
+);
+registerNotesHooks();
+registerWhisperPanelHooks();
 // Re-render the viewer when the archive index or the session changes on any client.
 onSettingChanged(mod, ["archiveIndex", "session"], () => {
   const viewer = ChatArchiveViewer.instance;
   if (viewer?.rendered) viewer.render();
 });
+// Korean web fonts toggled: the chat font choices follow. Whisper policy: the panel's picker and composer follow.
+onSettingChanged(mod, "koreanWebFonts", () => populateFontFamilyChoices());
+onSettingChanged(mod, "whisperPanelPolicy", () => WhisperPanel.instance?.refresh());
 Hooks.on("gctArchiveSaved", () => {
   const viewer = ChatArchiveViewer.instance;
   if (viewer?.rendered) viewer.render();
@@ -191,3 +252,5 @@ function onRenderChatMessageMarker(message, html) {
 }
 
 registerSpeakerBarHooks();
+// After the speaker / whisper bars so the typing line is mounted on top of them.
+registerTypingHooks();

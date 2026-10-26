@@ -4,7 +4,10 @@ import { rerenderVisibleMessages } from "./edit.js";
 import { regroupAll } from "./grouping.js";
 import { applyChitchatCssVars } from "./chitchat.js";
 import { mountSpeakerBar, updateSpeakerBar } from "./speaker-bar.js";
-import { applyChatTheme, CHAT_FONT_SIZES } from "./chat-theme.js";
+import { applyChatTheme, CHAT_FONT_SIZES, CHAT_FONT_FAMILY_CHOICES } from "./chat-theme.js";
+import { onTypingSettingChanged } from "./typing.js";
+import { FontStyleConfig, onFontStylesChanged } from "./font-styles.js";
+import { applyKoreanWebFonts } from "./fonts.js";
 
 /**
  * gatos-lib settings table (same keys, order, scopes, types, defaults and onChange as 0.5.2).
@@ -42,6 +45,9 @@ export function registerSettings() {
       choices: Object.fromEntries(CHAT_FONT_SIZES.map((n) => [n, n ? `${n}px` : "GCT.Settings.ChatFontSize.Default"])),
       default: 0, onChange: () => applyChatTheme(),
     },
+    // Choices are filled at ready (Foundry fonts + Korean web fonts), see chat-theme.js populateFontFamilyChoices.
+    chatFontFamily: { scope: "user", type: String, choices: CHAT_FONT_FAMILY_CHOICES, default: "", onChange: () => applyChatTheme() },
+    showPlayerName: { scope: "client", type: Boolean, default: true, onChange: () => refreshPortraits() },
 
     // ---- Chitchat
     chitchatTrigger: { scope: "client", type: String, default: "/p" },
@@ -53,6 +59,7 @@ export function registerSettings() {
     // ---- Grouping
     groupMessages: { scope: "client", type: Boolean, default: true, onChange: () => regroupAll() },
     groupChitchat: { scope: "client", type: Boolean, default: true, onChange: () => regroupAll() },
+    groupRolls: { scope: "client", type: Boolean, default: true, onChange: () => regroupAll() },
     groupGapMinutes: { scope: "client", type: Number, default: 0, range: { min: 0, max: 120, step: 5 }, nameKey: "GCT.Settings.GroupGap.Name", hintKey: "GCT.Settings.GroupGap.Hint", onChange: () => regroupAll() },
 
     // ---- Speaker bar
@@ -62,6 +69,23 @@ export function registerSettings() {
       scope: "client", type: String, hintKey: false,
       choices: { portrait: "GCT.Settings.FavoriteChipMode.Portrait", name: "GCT.Settings.FavoriteChipMode.NameChoice" },
       default: "portrait", onChange: () => updateSpeakerBar(),
+    },
+
+    // ---- Typing indicator
+    typingIndicator: { scope: "world", type: Boolean, default: true, onChange: () => onTypingSettingChanged() },
+    typingShowGM: { scope: "world", type: Boolean, default: false, onChange: () => onTypingSettingChanged() },
+
+    // ---- Inline font styles ({@name text}); the list is edited in the menu (GM)
+    fontStylesMenu: { menu: { type: FontStyleConfig, icon: "fa-solid fa-font", restricted: true } },
+    koreanWebFonts: { scope: "world", type: Boolean, default: true, onChange: () => applyKoreanWebFonts() },
+    // { list: [{ id, name, family, size, color, bold, italic }] }
+    fontStyles: { hidden: true, scope: "world", type: Object, default: { list: [] }, onChange: () => onFontStylesChanged() },
+
+    // ---- Whisper conversations panel
+    whisperPanelPolicy: {
+      scope: "world", type: String,
+      choices: ["all", "gm"],
+      default: "all",
     },
 
     // ---- Sessions & automatic archiving
@@ -77,6 +101,10 @@ export function registerSettings() {
 
     // ---- Hidden state
     viewerIncludeChitchat: { hidden: true, scope: "client", type: Boolean, default: true },
+    // Floating panel positions (gatos-lib persistPosition) and the whisper panel's last-read times.
+    notesPanelPosition: { hidden: true, scope: "client", type: Object, default: {} },
+    whisperPanelPosition: { hidden: true, scope: "client", type: Object, default: {} },
+    whisperPanelRead: { hidden: true, scope: "client", type: Object, default: {} },
     lastExportMode: { hidden: true, scope: "client", type: String, default: "html" },
     // Archive index: { list: [{ id, name, path, createdAt, createdBy, from, to, count }] }
     archiveIndex: { hidden: true, scope: "world", type: Object, default: { list: [] } },
