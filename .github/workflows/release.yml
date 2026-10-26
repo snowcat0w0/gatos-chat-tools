@@ -3,6 +3,8 @@ name: Release
 # Push a tag like v0.6.1 (same string as module.json "version" with a "v" in front).
 # The job checks that module.json already names this version and download URL,
 # zips the module and publishes module.json + the zip as a GitHub Release.
+# GitHub sometimes delivers one tag push as two events; a release that already
+# exists is left alone instead of failing the second run.
 
 on:
   push:
@@ -17,7 +19,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Skip if this release already exists
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists; nothing to do."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Check module.json against the tag
+        if: steps.existing.outputs.exists != 'true'
         id: meta
         run: |
           TAG="${GITHUB_REF_NAME#v}"
@@ -35,11 +50,13 @@ jobs:
           echo "version=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build zip
+        if: steps.existing.outputs.exists != 'true'
         run: |
           zip -r "${{ steps.meta.outputs.id }}.zip" . \
             -x ".git/*" ".github/*" ".gitignore" "test/*" "tools/*" "backups/*" "package.json" "*.zip"
 
       - name: Create GitHub Release
+        if: steps.existing.outputs.exists != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
