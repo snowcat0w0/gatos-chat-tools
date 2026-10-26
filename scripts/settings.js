@@ -4,6 +4,7 @@ import { rerenderVisibleMessages } from "./edit.js";
 import { regroupAll } from "./grouping.js";
 import { applyChitchatCssVars } from "./chitchat.js";
 import { mountSpeakerBar, updateSpeakerBar } from "./speaker-bar.js";
+import { applyChatTheme, CHAT_FONT_SIZES } from "./chat-theme.js";
 
 /**
  * gatos-lib settings table (same keys, order, scopes, types, defaults and onChange as 0.5.2).
@@ -26,6 +27,20 @@ export function registerSettings() {
       scope: "client", type: String, hintKey: false,
       choices: { square: "GCT.Settings.PortraitShape.Square", circle: "GCT.Settings.PortraitShape.Circle" },
       default: "square", onChange: () => refreshPortraits(),
+    },
+
+    // ---- Chat theme (client preferences)
+    chatTheme: {
+      scope: "client", type: String,
+      choices: ["default", "light", "dark", "sepia", "custom"],
+      default: "default", onChange: () => applyChatTheme(),
+    },
+    chatBgColor: { scope: "client", type: new foundry.data.fields.ColorField({ nullable: false, initial: "#f7f5f0" }), default: "#f7f5f0", onChange: () => applyChatTheme() },
+    chatTextColor: { scope: "client", type: new foundry.data.fields.ColorField({ nullable: false, initial: "#1f1f1f" }), default: "#1f1f1f", onChange: () => applyChatTheme() },
+    chatFontSize: {
+      scope: "client", type: Number,
+      choices: Object.fromEntries(CHAT_FONT_SIZES.map((n) => [n, n ? `${n}px` : "GCT.Settings.ChatFontSize.Default"])),
+      default: 0, onChange: () => applyChatTheme(),
     },
 
     // ---- Chitchat

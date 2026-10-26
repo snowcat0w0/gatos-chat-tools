@@ -35,6 +35,28 @@
         "Square": "Square",
         "Circle": "Circle"
       },
+      "ChatTheme": {
+        "Name": "Chat theme",
+        "Hint": "Background and text colour of chat message cards (this client only). Whispers and blind rolls get a light tint of their usual colour; chitchat and session markers keep their own colours.",
+        "Default": "Default (system)",
+        "Light": "Light",
+        "Dark": "Dark",
+        "Sepia": "Sepia",
+        "Custom": "Custom (colours below)"
+      },
+      "ChatBgColor": {
+        "Name": "Chat background colour (custom)",
+        "Hint": "Message background used when the chat theme is 'Custom'."
+      },
+      "ChatTextColor": {
+        "Name": "Chat text colour (custom)",
+        "Hint": "Message text colour used when the chat theme is 'Custom'."
+      },
+      "ChatFontSize": {
+        "Name": "Chat base font size",
+        "Hint": "Base font size of chat messages and the chat input (this client only). Chitchat uses 'Chitchat font size'.",
+        "Default": "Default (system)"
+      },
       "ChitchatTrigger": {
         "Name": "Extra chitchat trigger",
         "Hint": "Prefix used in addition to the built-in '/pt ', '`' and '!'. Leave empty to use only the built-in ones."
