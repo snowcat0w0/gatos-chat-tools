@@ -4,6 +4,7 @@ import { setting } from "./settings.js";
 import { groupSerialized } from "./grouping.js";
 import { pastelOf, stripChitchatMarkup } from "./chitchat.js";
 import { buildZip } from "./zip.js";
+import { KOREAN_WEB_FONTS_URL, koreanWebFontsOn } from "./fonts.js";
 
 const BLOCK_TAGS = new Set(["P", "DIV", "LI", "UL", "OL", "H1", "H2", "H3", "H4", "H5", "H6", "TR", "TABLE", "SECTION", "HEADER", "FOOTER", "BLOCKQUOTE", "PRE", "HR"]);
 
@@ -223,6 +224,10 @@ export function renderDocument(messages, { title, source, portraits = true, cssH
   const parts = [];
   parts.push(`<!DOCTYPE html><html lang="${esc(game.i18n.lang)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title>`);
   parts.push(cssHref ? `<link rel="stylesheet" href="${esc(cssHref)}">` : `<style>${EXPORT_CSS}</style>`);
+  // Inline font styles carry their CSS; the Korean web fonts they may name need the Google Fonts sheet.
+  if (koreanWebFontsOn() && messages.some((m) => String(m.html || m.content || "").includes("data-gct-fs"))) {
+    parts.push(`<link rel="stylesheet" href="${esc(KOREAN_WEB_FONTS_URL)}">`);
+  }
   parts.push(`</head><body${openDice ? ' class="dice-open"' : ""}><div class="wrap">`);
   parts.push(`<h1>${esc(title)}</h1>`);
   parts.push(`<div class="meta">${source ? `${esc(L("Export.Source"))}: ${esc(source)} · ` : ""}${esc(L("Export.Period"))}: ${esc(periodLabel(messages))} · ${esc(L("Export.Messages"))}: ${esc(L("Export.Count", { count: messages.length }))} · ${esc(L("Export.ExportedAt"))}: ${esc(fmtDateTime(Date.now()))}</div>`);

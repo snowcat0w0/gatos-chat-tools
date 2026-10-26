@@ -1,7 +1,7 @@
 import { MODULE_ID, L, mod, fmtDate, fmtDateTime } from "./constants.js";
 import { esc, formDialog, isLeadGM, postMarker as postMarkerCard, readForm } from "./lib.js";
 import { setting } from "./settings.js";
-import { saveArchive, getIndex, collectMessages, deleteMessagesChunked } from "./archive.js";
+import { saveArchive, getIndex, collectMessages, deleteMessagesChunked, liveMessageCount } from "./archive.js";
 
 /** A previous session's leftovers are archived on load only when the newest one is at least this old. */
 const IDLE_MS = 3 * 60 * 60 * 1000;
@@ -153,7 +153,7 @@ export function scheduleAutoArchive(delay = 2000) {
 export async function autoArchiveByCount() {
   const threshold = Number(setting("autoArchiveThreshold")) || 0;
   if (!threshold || running || !isLeadGM() || getSession()) return;
-  if (game.messages.size <= threshold) return;
+  if (liveMessageCount() <= threshold) return; // notes do not count
   running = true;
   try {
     const last = setting("lastArchived");

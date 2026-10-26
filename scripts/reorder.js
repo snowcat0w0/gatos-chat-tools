@@ -1,4 +1,4 @@
-import { MODULE_ID, L } from "./constants.js";
+import { MODULE_ID, L, isNote } from "./constants.js";
 import { chatLogElements, pushMessageContextOption } from "./lib.js";
 import { scheduleRegroup } from "./grouping.js";
 
@@ -69,7 +69,8 @@ export function onCreateChatMessageOrder(message, options) {
 export async function moveMessage(message, dir) {
   if (!game.user.isGM || !message) return;
   resortMessages();
-  const msgs = game.messages.contents;
+  // Hidden notes are not neighbours: moving past one would look like nothing happened.
+  const msgs = game.messages.contents.filter((m) => !isNote(m));
   const i = msgs.indexOf(message);
   const other = msgs[i + dir];
   if (i < 0 || !other) return ui.notifications.warn(L("Reorder.NoNeighbour"));
@@ -93,7 +94,7 @@ export async function setMessageTimestamp(message, timestamp) {
 export async function duplicateMessage(message) {
   if (!game.user.isGM || !message) return null;
   resortMessages();
-  const msgs = game.messages.contents;
+  const msgs = game.messages.contents.filter((m) => !isNote(m));
   const next = msgs[msgs.indexOf(message) + 1];
   const data = message.toObject();
   delete data._id;

@@ -1,4 +1,4 @@
-import { MODULE_ID, L, mod } from "./constants.js";
+import { MODULE_ID, L, mod, isNote } from "./constants.js";
 import { onChatUiRender, userFlagStore } from "./lib.js";
 import { setting } from "./settings.js";
 import { matchChitchat, isChitchat } from "./chitchat.js";
@@ -252,8 +252,8 @@ export function onRenderChatInput(app, elements) {
  * Always ends with the `gctSpeakerResolved` hook so other modules can act on the final speaker.
  */
 export function onPreCreateChatMessage(message, data, options, userId) {
-  // Duplicates keep the original speaker; session markers speak as the module.
-  if (options?.gctDuplicate || message.flags?.[MODULE_ID]?.sessionMarker) return;
+  // Duplicates keep the original speaker; session markers speak as the module; notes are the user's own.
+  if (options?.gctDuplicate || message.flags?.[MODULE_ID]?.sessionMarker || isNote(message)) return;
   applyLockedSpeaker(message, data, userId);
   Hooks.callAll("gctSpeakerResolved", message, data, options, userId);
 }

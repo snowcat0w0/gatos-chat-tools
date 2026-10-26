@@ -8,6 +8,7 @@ import {
   serializeMessage,
   renderMessageContent,
   collectMessages,
+  liveMessageCount,
   resolveRange,
   saveArchive,
   renameArchive,
@@ -139,7 +140,7 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
       canMerge: game.user.isGM && index.length >= 2,
       session: s ? { label: sessionLabel(s), started: fmtDateTime(s.startedAt), count: collectMessages({ from: s.startedAt }).length } : null,
       liveActive: this.source === "live",
-      liveCount: game.messages.size,
+      liveCount: liveMessageCount(),
       query: this.query,
       regex: this.regex,
       from: this.from,
@@ -872,7 +873,7 @@ export function onChatMessageCountChanged() {
   const el = viewer?.rendered ? viewer.element : null;
   if (!el) return;
   const live = el.querySelector('.gct-source[data-source="live"] .meta');
-  if (live) live.textContent = game.messages.size;
+  if (live) live.textContent = liveMessageCount();
   const s = getSession();
   const meta = el.querySelector(".gct-session-box.active .meta");
   if (s && meta) meta.textContent = L("Session.Since", { time: fmtDateTime(s.startedAt), count: collectMessages({ from: s.startedAt }).length });

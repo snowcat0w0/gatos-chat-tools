@@ -654,3 +654,197 @@ mark.gct-hl.current { background: #ff8c1a; outline: 2px solid #ff8c1a; }
 .gct-chat-font .chat-message:not(.gct-chitchat) { font-size: var(--gct-chat-font-size); }
 .gct-chat-font #chat-message,
 .gct-chat-font #chat-message .editor-content { font-size: var(--gct-chat-font-size); }
+
+/* ---- Chat font family (chat-theme.js: html.gct-chat-family); inline .gct-fs spans set their own font ---- */
+.gct-chat-family .chat-message,
+.gct-chat-family .chat-message .message-content,
+.gct-chat-family #chat-message { font-family: var(--gct-chat-font-family); }
+
+/* ---- Player name under the character name (portrait.js applyPlayerName) ---- */
+.chat-message .message-sender .gct-player-name {
+  display: block;
+  font-size: var(--font-size-11, 11px);
+  font-weight: normal;
+  line-height: 1.2;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-message.gct-has-player > .message-header .message-sender { line-height: 1.15; }
+
+/* ---- Shared notes: never in the chat log nor the notification cards (core un-hides cards it posts) ---- */
+.chat-message.gct-note { display: none !important; }
+
+/* ---- Typing indicator (typing.js): fixed height above the input stack, so the log never jumps ---- */
+.gct-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0 0 -8px;
+  padding: 0 6px;
+  font-size: var(--font-size-11, 11px);
+  line-height: 16px;
+  color: var(--color-text-light-highlight, #f0f0e0);
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+.gct-typing .gct-typing-text { overflow: hidden; text-overflow: ellipsis; text-shadow: 0 0 3px #000; }
+.gct-typing.idle .gct-typing-dots { display: none; }
+.gct-typing-dots { display: inline-flex; gap: 2px; flex: 0 0 auto; }
+.gct-typing-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  animation: gct-typing-dot 1.2s infinite ease-in-out;
+}
+.gct-typing-dots i:nth-child(2) { animation-delay: 0.2s; }
+.gct-typing-dots i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes gct-typing-dot {
+  0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gct-typing-dots i { animation: none; opacity: 0.8; }
+}
+/* Notifications area (sidebar collapsed): #chat-notifications is a grid, so float instead of adding a row. */
+#chat-notifications > .gct-typing.gct-typing-float {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0;
+  z-index: 1;
+}
+
+/* ---- Inline font styles ---- */
+#chat-controls .gct-fs-btn { font-size: var(--font-size-12, 12px); }
+.gct-fs-menu {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 280px;
+  max-height: 60vh;
+  padding: 6px;
+  background: var(--color-cool-5, #1f2128);
+  border: 1px solid var(--color-border-light-tertiary, #7a7971);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  color: var(--color-text-light-highlight, #f0f0e0);
+  font-size: var(--font-size-12, 12px);
+}
+.gct-fs-menu .gct-fs-menu-head { font-weight: 700; opacity: 0.8; padding: 0 2px; }
+.gct-fs-menu .gct-fs-menu-list { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; min-height: 0; }
+.gct-fs-menu .gct-fs-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+  min-height: 30px;
+  padding: 2px 8px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  color: inherit;
+}
+.gct-fs-menu .gct-fs-item:hover,
+.gct-fs-menu .gct-fs-item:focus-visible { border-color: var(--color-border-highlight, #ff6400); background: rgba(255, 255, 255, 0.08); }
+.gct-fs-menu .gct-fs-item-name { flex: 0 0 auto; font-family: var(--font-monospace, monospace); opacity: 0.75; }
+.gct-fs-menu .gct-fs-item-sample { flex: 1 1 auto; min-width: 0; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.gct-fs-menu .gct-fs-empty,
+.gct-fs-menu .gct-fs-menu-hint { margin: 0; padding: 0 2px; opacity: 0.7; }
+.gct-fs-menu .gct-fs-manage { height: 26px; font-size: var(--font-size-12, 12px); }
+
+.gct-font-styles .window-content { padding: 8px; }
+.gct-fs-config { display: flex; flex-direction: column; gap: 8px; height: 100%; min-height: 0; }
+.gct-fs-config .hint { margin: 0; }
+.gct-fs-config .gct-fs-rows { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.gct-fs-config .gct-fs-row { border: 1px solid var(--color-border-light-2, #7a7971); border-radius: 4px; padding: 6px; display: flex; flex-direction: column; gap: 4px; }
+.gct-fs-config .gct-fs-row.invalid { border-color: #c0392b; box-shadow: inset 0 0 0 1px #c0392b; }
+.gct-fs-config .gct-fs-fields { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.gct-fs-config .gct-fs-fields input[name=name] { flex: 0 0 120px; }
+.gct-fs-config .gct-fs-fields select[name=family] { flex: 1 1 160px; min-width: 140px; }
+.gct-fs-config .gct-fs-fields input[name=customFamily] { flex: 1 1 160px; }
+.gct-fs-config .gct-fs-fields input[name=customFamily][hidden] { display: none; }
+.gct-fs-config .gct-fs-fields input[name=size] { flex: 0 0 64px; }
+.gct-fs-config .gct-fs-color,
+.gct-fs-config .gct-fs-toggle { display: inline-flex; align-items: center; gap: 2px; cursor: pointer; }
+.gct-fs-config .gct-fs-color input[type=color] { width: 28px; height: 24px; padding: 0; border: none; background: none; }
+.gct-fs-config .gct-fs-row-tools { display: inline-flex; gap: 8px; margin-left: auto; }
+.gct-fs-config .gct-fs-row-tools a { cursor: pointer; opacity: 0.75; }
+.gct-fs-config .gct-fs-row-tools a:hover { opacity: 1; }
+.gct-fs-config .gct-fs-preview { display: flex; align-items: baseline; gap: 10px; padding: 4px 6px; border-radius: 3px; background: rgba(0, 0, 0, 0.15); min-height: 28px; overflow: hidden; }
+.gct-fs-config .gct-fs-code { flex: 0 0 auto; font-size: var(--font-size-11, 11px); opacity: 0.7; }
+.gct-fs-config .gct-fs-sample { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.gct-fs-config .gct-fs-none { padding: 12px 0; text-align: center; }
+.gct-fs-config .gct-fs-footer { display: flex; gap: 6px; align-items: center; }
+.gct-fs-config .gct-fs-footer button { flex: 0 0 auto; width: auto; padding: 0 12px; }
+.gct-fs-config .gct-fs-spacer { flex: 1; }
+
+/* ---- Floating panels (notes.js, whisper-panel.js) ---- */
+.gct-panel .window-content { padding: 0; }
+.gct-panel .gct-panel-body { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.gct-panel .gct-panel-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 6px; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.gct-panel .gct-wp-messages { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.gct-panel .gct-panel-item { border: 1px solid var(--color-border-light-2, #7a7971); border-radius: 6px; padding: 4px 8px; background: rgba(0, 0, 0, 0.12); }
+.gct-panel .gct-panel-item.mine { background: rgba(80, 120, 200, 0.12); }
+.gct-panel .gct-panel-item header { display: flex; align-items: baseline; gap: 6px; font-size: var(--font-size-11, 11px); opacity: 0.85; }
+.gct-panel .gct-panel-item header time { margin-left: auto; opacity: 0.75; white-space: nowrap; }
+.gct-panel .gct-panel-author { font-size: var(--font-size-12, 12px); }
+.gct-panel .gct-panel-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--font-size-13, 13px); }
+.gct-panel .gct-panel-empty { opacity: 0.6; text-align: center; padding: 16px 0; }
+.gct-panel .gct-panel-compose { display: flex; gap: 6px; align-items: stretch; padding: 6px; border-top: 1px solid var(--color-border-light-2, #7a7971); }
+.gct-panel .gct-panel-compose textarea { flex: 1 1 auto; resize: vertical; min-height: 44px; font-size: var(--font-size-13, 13px); }
+.gct-panel .gct-panel-compose button { flex: 0 0 36px; width: 36px; height: auto; }
+.gct-panel .gct-panel-hint { margin: 0; padding: 0 8px 6px; font-size: var(--font-size-11, 11px); opacity: 0.6; }
+.gct-panel .gct-panel-hint:empty { display: none; }
+.gct-notes-panel .gct-note-edit { cursor: pointer; opacity: 0.5; margin-left: 4px; }
+.gct-notes-panel .gct-note-edit:hover { opacity: 1; }
+.gct-note-dialog textarea { width: 100%; min-height: 160px; resize: vertical; }
+
+.gct-whisper-panel .gct-wp-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 6px; border-bottom: 1px solid var(--color-border-light-2, #7a7971); }
+.gct-whisper-panel .gct-wp-tab { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border: 1px solid var(--color-border-light-2, #7a7971); border-radius: 12px; cursor: pointer; font-size: var(--font-size-12, 12px); white-space: nowrap; }
+.gct-whisper-panel .gct-wp-tab.active { border-color: #9b6bdf; background: rgba(140, 90, 220, 0.3); }
+.gct-whisper-panel .gct-wp-tab em { font-style: normal; font-size: 0.8em; opacity: 0.7; }
+.gct-whisper-panel .gct-wp-dot { width: 7px; height: 7px; border-radius: 50%; background: #777; }
+.gct-whisper-panel .gct-wp-dot.on { background: #4caf50; }
+.gct-whisper-panel .gct-wp-badge { min-width: 16px; padding: 0 4px; border-radius: 8px; background: #c0392b; color: #fff; font-size: 10px; line-height: 16px; text-align: center; }
+.gct-whisper-panel .gct-wp-close { opacity: 0.6; padding-left: 2px; }
+.gct-whisper-panel .gct-wp-close:hover { opacity: 1; }
+.gct-whisper-panel .gct-wp-new { flex: 0 1 auto; width: auto; max-width: 160px; height: 22px; font-size: var(--font-size-12, 12px); }
+.gct-whisper-panel .gct-wp-older { width: 100%; height: 24px; font-size: var(--font-size-12, 12px); flex: 0 0 auto; }
+.gct-whisper-panel .gct-wp-older[hidden] { display: none; }
+.gct-whisper-panel .gct-wp-item.mine { border-color: rgba(155, 107, 223, 0.7); }
+.gct-whisper-panel .gct-wp-to { opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gct-whisper-panel .gct-wp-user { font-weight: normal; opacity: 0.7; }
+.gct-whisper-panel .gct-wp-flavor { font-style: italic; font-size: var(--font-size-12, 12px); opacity: 0.8; }
+.gct-whisper-panel .gct-wp-content { white-space: normal; }
+.gct-whisper-panel .gct-wp-content img { max-width: 100%; height: auto; }
+.gct-whisper-panel .gct-panel-compose textarea:disabled { opacity: 0.6; }
+
+/* Unread count on the whisper panel's chat-controls button */
+#chat-controls .gct-open-whispers { position: relative; }
+#chat-controls .gct-open-whispers[data-unread]::after {
+  content: attr(data-unread);
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  background: #c0392b;
+  color: #fff;
+  font: 700 9px/14px var(--font-body, sans-serif);
+  text-align: center;
+  pointer-events: none;
+}

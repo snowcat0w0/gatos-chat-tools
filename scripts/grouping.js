@@ -1,4 +1,4 @@
-import { MODULE_ID } from "./constants.js";
+import { MODULE_ID, isNote } from "./constants.js";
 import { chatLogElements } from "./lib.js";
 import { setting } from "./settings.js";
 import { isChitchat } from "./chitchat.js";
@@ -16,9 +16,11 @@ function whisperKey(m) {
  */
 export function groupKey(m) {
   if (!m) return null;
-  if (m.flags?.[MODULE_ID]?.sessionMarker) return null;
+  if (m.flags?.[MODULE_ID]?.sessionMarker || isNote(m)) return null;
   if (isChitchat(m)) return setting("groupChitchat") ? "cc" : null;
   if (!setting("groupMessages")) return null;
+  // Rolls stand alone unless the user keeps grouping them (groupRolls, default on = earlier behaviour).
+  if (m.isRoll && !setting("groupRolls")) return null;
   const author = m.author?.id ?? m._source?.author ?? m.userId ?? "";
   return `m|${author}|${speakerKey(m.speaker)}|${m.style}|${whisperKey(m)}|${m.blind ? 1 : 0}`;
 }
@@ -33,7 +35,8 @@ const CLASSES = ["gct-group-top", "gct-group-middle", "gct-group-end", "gct-cont
 
 /** Assign group classes to every message element of one chat log. */
 function regroupLog(log) {
-  const items = [...log.querySelectorAll(":scope > .chat-message[data-message-id]")].filter((li) => !li.classList.contains("deleting"));
+  // Hidden notes are skipped, so the messages around one still group with each other.
+  const items = [...log.querySelectorAll(":scope > .chat-message[data-message-id]")].filter((li) => !li.classList.contains("deleting") && !li.classList.contains("gct-note"));
   const gap = maxGap();
   const info = items.map((li) => {
     const m = game.messages.get(li.dataset.messageId);
@@ -67,9 +70,10 @@ export function scheduleRegroup(delay = 30) {
 export function groupSerialized(messages) {
   const gap = maxGap();
   const key = (m) => {
-    if (m.sessionMarker) return null;
+    if (m.sessionMarker || m.note) return null;
     if (m.chitchat) return setting("groupChitchat") ? "cc" : null;
     if (!setting("groupMessages")) return null;
+    if (m.isRoll && !setting("groupRolls")) return null;
     return `m|${m.userId ?? ""}|${m.token ?? m.actor ?? m.alias ?? ""}|${m.style}|${(m.whisper ?? []).join(",")}|${m.blind ? 1 : 0}`;
   };
   const keys = messages.map(key);

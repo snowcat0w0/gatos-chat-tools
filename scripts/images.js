@@ -1,4 +1,4 @@
-import { MODULE_ID, mod } from "./constants.js";
+import { MODULE_ID, mod, isNote } from "./constants.js";
 import { addChatControl, ensureDataDir, htmlRoot, onChatUiRender, requireModule } from "./lib.js";
 
 /**
@@ -296,7 +296,7 @@ function onChatMessage() {
 
 /** preCreateChatMessage: put tray images above the text; expand !ci|url! syntax. */
 function onPreCreateChatMessage(message, data, options, userId) {
-  if (!imagesActive()) return;
+  if (!imagesActive() || isNote(message)) return; // pending images never attach to a shared note
   let content = message.content ?? "";
   let changed = false;
 
