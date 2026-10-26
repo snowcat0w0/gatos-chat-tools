@@ -21,7 +21,8 @@ import { chatInputElement, chatInputText, onChatInputChange } from "./chat-input
 const SEND_EVERY = 2000;
 const EXPIRE_AFTER = 3500;
 const LINE_CLASS = "gct-typing";
-const BAR_SELECTOR = ".gct-speaker-bar, .gct-whisper-bar";
+// Bars stacked above the input; gatos-visual-novel's expression strip sits between the speaker bar and the input.
+const BAR_SELECTOR = ".gct-speaker-bar, .gct-whisper-bar, .gvn-expr-strip";
 
 /** Core chat commands that always post a public message (ChatLog.CHAT_COMMANDS ic / ooc / emote and aliases). */
 const PUBLIC_COMMAND = /^\/(?:ic|ooc|em|emote|me)\s/i;
