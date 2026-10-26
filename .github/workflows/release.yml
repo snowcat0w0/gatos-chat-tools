@@ -1,0 +1,52 @@
+name: Release
+
+# Push a tag like v0.6.1 (same string as module.json "version" with a "v" in front).
+# The job checks that module.json already names this version and download URL,
+# zips the module and publishes module.json + the zip as a GitHub Release.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check module.json against the tag
+        id: meta
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          ID=$(jq -r .id module.json)
+          VERSION=$(jq -r .version module.json)
+          DOWNLOAD=$(jq -r .download module.json)
+          EXPECTED="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${TAG}/${ID}.zip"
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "module.json version is $VERSION but the tag is v$TAG"; exit 1
+          fi
+          if [ "$DOWNLOAD" != "$EXPECTED" ]; then
+            echo "module.json download must be $EXPECTED (is $DOWNLOAD)"; exit 1
+          fi
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+          echo "version=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build zip
+        run: |
+          zip -r "${{ steps.meta.outputs.id }}.zip" . \
+            -x ".git/*" ".github/*" ".gitignore" "test/*" "tools/*" "backups/*" "package.json" "*.zip"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PRE=""
+          case "${{ steps.meta.outputs.version }}" in *-*) PRE="--prerelease";; esac
+          gh release create "$GITHUB_REF_NAME" \
+            "${{ steps.meta.outputs.id }}.zip" module.json \
+            --title "${{ steps.meta.outputs.id }} ${{ steps.meta.outputs.version }}" \
+            --notes "Foundry VTT 매니페스트 URL: $(jq -r .manifest module.json)" \
+            $PRE

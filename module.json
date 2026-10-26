@@ -8,13 +8,23 @@
       "name": "jesun"
     }
   ],
+  "url": "https://github.com/snowcat0w0/gatos-chat-tools",
+  "manifest": "https://raw.githubusercontent.com/snowcat0w0/gatos-chat-tools/master/module.json",
+  "download": "https://github.com/snowcat0w0/gatos-chat-tools/releases/download/v0.6.0/gatos-chat-tools.zip",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
   },
   "relationships": {
     "requires": [
-      { "id": "gatos-lib", "type": "module", "compatibility": { "minimum": "1.0.0-alpha.1" } }
+      {
+        "id": "gatos-lib",
+        "type": "module",
+        "compatibility": {
+          "minimum": "1.0.0-alpha.1"
+        },
+        "manifest": "https://raw.githubusercontent.com/snowcat0w0/gatos-lib/master/module.json"
+      }
     ]
   },
   "esmodules": [
