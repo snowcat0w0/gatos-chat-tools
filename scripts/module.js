@@ -13,6 +13,7 @@ import { moveMessage, duplicateMessage, setMessageTimestamp, resortMessages, onU
 import { onRenderChatMessagePortrait, onPreCreateChatMessage, portraitFor, refreshPortraits, lookupPortrait, registerPortraitProvider } from "./portrait.js";
 import { onChatMessage, onRenderChatMessageChitchat, applyChitchatCssVars, matchChitchat, isChitchat } from "./chitchat.js";
 import { scheduleRegroup, regroupAll } from "./grouping.js";
+import { applyChatTheme } from "./chat-theme.js";
 import { markupToRuby, rubyToMarkup, onPreCreateChatMessageRuby, onPreUpdateChatMessageRuby } from "./ruby.js";
 import { registerChatImagesCompat } from "./compat-chat-images.js";
 import { registerImageHooks, imagesApi } from "./images.js";
@@ -32,6 +33,7 @@ Hooks.once("init", () => {
   registerSettings();
   mod.preloadTemplates(Object.values(TEMPLATES), PARTIALS);
   applyChitchatCssVars();
+  applyChatTheme();
 
   game.keybindings.register(MODULE_ID, "openWhisper", {
     name: "GCT.Whisper.Title",

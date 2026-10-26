@@ -637,3 +637,20 @@ mark.gct-hl.current { background: #ff8c1a; outline: 2px solid #ff8c1a; }
 
 .chat-message .gct-whisper-reply { cursor: pointer; color: #9b6bdf; margin-right: 4px; }
 .chat-message .gct-whisper-reply:hover { color: #c79bff; }
+
+/* ---- Personal chat theme (chat-theme.js: html.gct-chat-themed / html.gct-chat-font) ---- */
+/* Core colours are custom properties on .chat-message; re-point them so whisper/blind/emote keep a tint and their borders. */
+.gct-chat-themed .chat-message:not(.gct-chitchat):not(.gct-marker) {
+  --chat-message-background: var(--gct-chat-bg);
+  --chat-message-border-color: color-mix(in srgb, var(--gct-chat-bg), var(--gct-chat-text) 35%);
+  --color-whisper-background: color-mix(in srgb, var(--gct-chat-bg), var(--color-whisper-border, #545469) 18%);
+  --color-blind-background: color-mix(in srgb, var(--gct-chat-bg), var(--color-blind-border, #6b476b) 18%);
+  --color-emote-background: color-mix(in srgb, var(--gct-chat-bg), var(--color-emote-border, #887c5d) 18%);
+  color: var(--gct-chat-text);
+}
+.gct-chat-themed .chat-message:not(.gct-chitchat):not(.gct-marker) > .message-header {
+  color: color-mix(in srgb, var(--gct-chat-text) 75%, transparent);
+}
+.gct-chat-font .chat-message:not(.gct-chitchat) { font-size: var(--gct-chat-font-size); }
+.gct-chat-font #chat-message,
+.gct-chat-font #chat-message .editor-content { font-size: var(--gct-chat-font-size); }
