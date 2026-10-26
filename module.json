@@ -2,7 +2,7 @@
   "id": "gatos-chat-tools",
   "title": "Gato's Chat Tools",
   "description": "채팅 이미지 붙여넣기·업로드(Chat Images 대체), 귓속말 대상(GM·플레이어·토큰 소유자) 지정, 채팅 메시지 수정·즉시 삭제·순서 이동, 잡담·그룹화·발화자 바·포트레잇·루비·글꼴 스타일, 입력 중 표시, 공유 메모·귓속말 대화창, 세션 로그와 자동 아카이브, 북마크·하이라이트, 고급 검색·다중 선택, 아카이브 가져오기·병합, TXT/Markdown/HTML/ZIP/폴더/저널 내보내기. 시스템 무관.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "authors": [
     {
       "name": "jesun"
@@ -10,7 +10,7 @@
   ],
   "url": "https://github.com/snowcat0w0/gatos-chat-tools",
   "manifest": "https://raw.githubusercontent.com/snowcat0w0/gatos-chat-tools/foundry-v14/module.json",
-  "download": "https://github.com/snowcat0w0/gatos-chat-tools/releases/download/v0.8.0/gatos-chat-tools.zip",
+  "download": "https://github.com/snowcat0w0/gatos-chat-tools/releases/download/v0.9.0/gatos-chat-tools.zip",
   "compatibility": {
     "minimum": "14",
     "verified": "14"

@@ -181,7 +181,7 @@ GM은 모든 메시지를, 플레이어는 자기가 보낸 메시지만 고칠 
 
 `game.modules.get("gatos-chat-tools").api` 안에 함수들이 있어요. 예를 들어 `api.openViewer()`는 아카이브 창을 열어요. 전체 목록과 다른 모듈이 끼어들 수 있는 훅(`gct…`로 시작)은 `scripts/module.js`를 열어 보세요.
 
-0.8.0에서 늘어난 것:
+0.9.0에서 늘어난 것:
 
 - `api.panels.notes()`, `api.panels.whispers(userId)` — 메모 창, 귓속말 대화창(그 사람 탭으로) 열기
 - `api.fontStyles.list()`, `api.fontStyles.apply(text, name)` — 스타일 목록, 글자를 스타일 HTML로 바꾸기 (`convert`, `toMarkup`, `wrapSelection`, `openMenu`, `openConfig`도 있어요)
@@ -190,7 +190,7 @@ GM은 모든 메시지를, 플레이어는 자기가 보낸 메시지만 고칠 
 
 ## 바뀐 점
 
-### 0.8.0
+### 0.9.0 (v14판; v13판은 0.8.0)
 
 - 입력 중 표시, 글꼴 스타일 `{@이름 글자}`와 한글 웹폰트, 채팅 글꼴 고르기, 공유 메모 창, 귓속말 대화창이 생겼어요.
 - 캐릭터 이름 아래에 플레이어 이름이 나와요. 굴림 메시지를 묶지 않는 설정이 생겼어요.
