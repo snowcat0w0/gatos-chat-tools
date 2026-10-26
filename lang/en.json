@@ -37,7 +37,7 @@
       },
       "ChatTheme": {
         "Name": "Chat theme",
-        "Hint": "Background and text colour of chat message cards (this client only). Whispers and blind rolls get a light tint of their usual colour; chitchat and session markers keep their own colours.",
+        "Hint": "Background and text colour of chat message cards (saved per user account, so it follows you across devices). Whispers and blind rolls get a light tint of their usual colour; chitchat and session markers keep their own colours.",
         "Default": "Default (system)",
         "Light": "Light",
         "Dark": "Dark",
@@ -54,7 +54,7 @@
       },
       "ChatFontSize": {
         "Name": "Chat base font size",
-        "Hint": "Base font size of chat messages and the chat input (this client only). Chitchat uses 'Chitchat font size'.",
+        "Hint": "Base font size of chat messages and the chat input (saved per user account, so it follows you across devices). Chitchat uses 'Chitchat font size'.",
         "Default": "Default (system)"
       },
       "ChitchatTrigger": {

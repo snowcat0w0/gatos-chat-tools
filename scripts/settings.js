@@ -29,16 +29,16 @@ export function registerSettings() {
       default: "square", onChange: () => refreshPortraits(),
     },
 
-    // ---- Chat theme (client preferences)
+    // ---- Chat theme (per user account, so it follows players across devices)
     chatTheme: {
-      scope: "client", type: String,
+      scope: "user", type: String,
       choices: ["default", "light", "dark", "sepia", "custom"],
       default: "default", onChange: () => applyChatTheme(),
     },
-    chatBgColor: { scope: "client", type: new foundry.data.fields.ColorField({ nullable: false, initial: "#f7f5f0" }), default: "#f7f5f0", onChange: () => applyChatTheme() },
-    chatTextColor: { scope: "client", type: new foundry.data.fields.ColorField({ nullable: false, initial: "#1f1f1f" }), default: "#1f1f1f", onChange: () => applyChatTheme() },
+    chatBgColor: { scope: "user", type: new foundry.data.fields.ColorField({ nullable: false, initial: "#f7f5f0" }), default: "#f7f5f0", onChange: () => applyChatTheme() },
+    chatTextColor: { scope: "user", type: new foundry.data.fields.ColorField({ nullable: false, initial: "#1f1f1f" }), default: "#1f1f1f", onChange: () => applyChatTheme() },
     chatFontSize: {
-      scope: "client", type: Number,
+      scope: "user", type: Number,
       choices: Object.fromEntries(CHAT_FONT_SIZES.map((n) => [n, n ? `${n}px` : "GCT.Settings.ChatFontSize.Default"])),
       default: 0, onChange: () => applyChatTheme(),
     },
