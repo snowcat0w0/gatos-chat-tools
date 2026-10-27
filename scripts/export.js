@@ -180,7 +180,7 @@ h1 { font-size: 22px; margin: 0 0 4px; }
 .msg header .alias { font-weight: 700; font-size: 14px; color: #fff; }
 .msg header .secret { color: #c9a84c; }
 .msg header time { margin-left: auto; }
-.msg.g-top, .msg.g-middle { margin-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.msg.g-top, .msg.g-middle { margin-bottom: 0; border-bottom: none; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 .msg.cont { border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; padding-top: 2px; }
 .msg.cont header .alias, .msg.cont header .user, .msg.cont header .secret { display: none; }
 .msg.cont header { margin-bottom: 0; opacity: 0.6; font-size: 11px; }
