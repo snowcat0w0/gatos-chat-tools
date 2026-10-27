@@ -256,9 +256,11 @@ mark.gct-hl {
 .chat-message.gct-chitchat.gct-cc-break > .message-content { flex-direction: column; gap: 0; }
 
 /* ---- Grouping ---- */
+/* A group reads as one card: the upper message loses its bottom edge, the continued one its top edge. */
 .chat-message.gct-group-top,
 .chat-message.gct-group-middle {
   margin-bottom: 0;
+  border-bottom: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
