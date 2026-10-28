@@ -1,5 +1,6 @@
 import { MODULE_ID, TEMPLATES, L, mod, fmtDate, fmtDateTime, fmtTime, parseDateInput, startOfDay, endOfDay } from "./constants.js";
-import { SingletonMixin, addChatControl, confirm, esc, escapeRegExp, formDialog, jumpToMessage, promptText, readForm, renderTemplate } from "./lib.js";
+import { SingletonMixin, confirm, esc, escapeRegExp, formDialog, jumpToMessage, promptText, readForm, renderTemplate } from "./lib.js";
+import { addToolsButton } from "./chat-controls.js";
 import { setting } from "./settings.js";
 import {
   getIndex,
@@ -856,9 +857,9 @@ export async function openDeleteDialog() {
 /*  Chat controls button                        */
 /* -------------------------------------------- */
 
-/** Add the archive/search button to the chat controls bar (idempotent; gatos-lib addChatControl appends `button.ui-control.icon`). */
+/** Add the archive/search button to the module's chat-controls row (idempotent; appends `button.ui-control.icon`). */
 export function injectChatButton() {
-  addChatControl({ cls: "gct-open-viewer", icon: "fa-solid fa-box-archive", label: L("Chat.OpenViewer"), onClick: () => ChatArchiveViewer.open() });
+  addToolsButton({ cls: "gct-open-viewer", icon: "fa-solid fa-box-archive", label: L("Chat.OpenViewer"), onClick: () => ChatArchiveViewer.open() });
 }
 
 /** Re-render the open viewer when the user's bookmarks change (another window, the chat context menu). */

@@ -1,5 +1,6 @@
 import { MODULE_ID, mod, isNote } from "./constants.js";
-import { addChatControl, ensureDataDir, htmlRoot, onChatUiRender, requireModule } from "./lib.js";
+import { ensureDataDir, htmlRoot, onChatUiRender, requireModule } from "./lib.js";
+import { addToolsButton, chatToolsRow } from "./chat-controls.js";
 
 /**
  * Native image attachments for the chat input (absorbs what the "chat-images" module did):
@@ -352,7 +353,7 @@ function onRenderChatMessageHTML(message, html) {
 
 function injectUploadButton() {
   if (!imagesActive() || !canUpload() || !game.settings.get(MODULE_ID, "imageUploadButton")) return;
-  const controls = document.getElementById("chat-controls");
+  const controls = chatToolsRow();
   if (!controls || controls.querySelector(`.${BUTTON_CLASS}`)) return;
   const input = document.createElement("input");
   input.type = "file";
@@ -364,8 +365,8 @@ function injectUploadButton() {
     input.value = "";
     chatInput()?.focus();
   });
-  // gatos-lib addChatControl appends the button; the hidden file input follows it as before.
-  const btn = addChatControl({ cls: BUTTON_CLASS, icon: "fa-solid fa-images", label: Li("Button"), onClick: () => input.click(), controls });
+  // The button goes on the module's row; the hidden file input follows it as before.
+  const btn = addToolsButton({ cls: BUTTON_CLASS, icon: "fa-solid fa-images", label: Li("Button"), onClick: () => input.click(), controls });
   btn.dataset.tooltip = Li("Button");
   controls.append(input);
 }

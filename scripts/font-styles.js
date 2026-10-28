@@ -1,5 +1,6 @@
 import { L, mod, isNote } from "./constants.js";
-import { addChatControl, esc, settingStore } from "./lib.js";
+import { esc, settingStore } from "./lib.js";
+import { addToolsButton } from "./chat-controls.js";
 import { markupToFontStyles, fontStylesToMarkup, fontStyleSpan, sanitizeStyle, styleCss, isValidStyleName } from "./font-styles-markup.js";
 import { fontGroups } from "./fonts.js";
 import { wrapChatSelection } from "./chat-input.js";
@@ -132,9 +133,9 @@ export function openFontMenu(anchor = document.querySelector("#chat-controls .gc
   };
 }
 
-/** The "A" button in the chat controls (gatos-lib addChatControl; idempotent). */
+/** The "A" button on the module's chat-controls row (idempotent). */
 export function injectFontStyleButton() {
-  const btn = addChatControl({
+  const btn = addToolsButton({
     cls: "gct-fs-btn",
     icon: "fa-solid fa-font",
     label: L("FontStyle.ButtonTooltip"),
