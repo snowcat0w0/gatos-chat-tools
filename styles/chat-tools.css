@@ -561,6 +561,20 @@ mark.gct-hl.current { background: #ff8c1a; outline: 2px solid #ff8c1a; }
 .ci-message-image:not(:last-child) { margin-bottom: 0.5rem; }
 .ci-notes:empty { display: none; }
 
+/* ---- Chat controls: the module's own row (chat-controls.js) ---- */
+/* Core's first line keeps the message-mode buttons; every button of this module sits on a second, full-width
+   line so all of them show at the sidebar's default width. */
+#chat-controls { flex-wrap: wrap; row-gap: 4px; }
+/* `order` keeps the row last: buttons other modules append to #chat-controls stay on core's line. */
+#chat-controls > .gct-controls-row { order: 1; flex: 1 0 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+/* Core's "save chat log" / "clear chat log" buttons (GM): the archive viewer covers both, so they go. */
+#chat-controls .control-buttons > [data-action="export"],
+#chat-controls .control-buttons > [data-action="flush"] { display: none; }
+/* Collapsed sidebar: #chat-controls floats in the 32px gap beside the notification input (core makes the
+   mode buttons a column there), so everything stacks into one column. */
+#chat-notifications #chat-controls { display: flex; flex-direction: column; gap: 4px; }
+#chat-notifications #chat-controls > .gct-controls-row { flex: 0 0 auto; flex-direction: column; }
+
 /* ---- Whisper target ---- */
 #chat-controls .gct-whisper-btn.active { color: #c79bff; background: rgba(140, 90, 220, 0.3); border-color: #9b6bdf; }
 .gct-whisper-bar {

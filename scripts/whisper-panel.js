@@ -1,5 +1,6 @@
 import { MODULE_ID, L, mod, isNote, fmtDateTime } from "./constants.js";
-import { SingletonMixin, addChatControl, debounce, esc, renderMessageContent } from "./lib.js";
+import { SingletonMixin, debounce, esc, renderMessageContent } from "./lib.js";
+import { addToolsButton } from "./chat-controls.js";
 import { setting } from "./settings.js";
 import { resolveRecipients, describeTarget } from "./whisper.js";
 import { isChitchat, stripChitchatMarkup } from "./chitchat.js";
@@ -429,9 +430,9 @@ export function updateWhisperButtonBadge(total = unreadCounts().total) {
   else delete btn.dataset.unread;
 }
 
-/** The chat-controls button (idempotent). */
+/** The button on the module's chat-controls row (idempotent). */
 export function injectWhisperPanelButton() {
-  addChatControl({ cls: "gct-open-whispers", icon: "fa-solid fa-comments", label: L("WhisperPanel.Title"), onClick: () => WhisperPanel.toggle() });
+  addToolsButton({ cls: "gct-open-whispers", icon: "fa-solid fa-comments", label: L("WhisperPanel.Title"), onClick: () => WhisperPanel.toggle() });
   updateWhisperButtonBadge();
 }
 

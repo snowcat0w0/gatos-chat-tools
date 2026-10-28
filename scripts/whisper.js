@@ -1,5 +1,6 @@
 import { MODULE_ID, L, mod } from "./constants.js";
-import { addChatControl, esc, formDialog, gmUsers, htmlRoot, onChatUiRender, userFlagStore } from "./lib.js";
+import { esc, formDialog, gmUsers, htmlRoot, onChatUiRender, userFlagStore } from "./lib.js";
+import { addToolsButton } from "./chat-controls.js";
 import { matchChitchat } from "./chitchat.js";
 
 const FLAG = "whisperTarget";
@@ -290,14 +291,17 @@ export async function openWhisperDialog() {
 /*  Chat input UI                               */
 /* -------------------------------------------- */
 
-/** The secret-agent button in the chat controls (click: choose target, right-click: back to public). gatos-lib addChatControl, after #roll-privacy. */
+/**
+ * The paper-plane button in the chat controls (click: choose target, right-click: back to public). First on the
+ * module's row (chat-controls.js). Not fa-user-secret: core's "GM" message mode above it uses that icon.
+ */
 export function injectWhisperButton() {
-  const btn = addChatControl({
+  const btn = addToolsButton({
     cls: "gct-whisper-btn",
-    icon: "fa-solid fa-user-secret",
+    icon: "fa-solid fa-paper-plane",
     onClick: () => openWhisperDialog(),
     onContextMenu: () => clearWhisperTarget(),
-    position: { after: "#roll-privacy", fallback: "prepend" },
+    position: "prepend",
   });
   if (!btn) return;
   updateWhisperBar();
@@ -324,7 +328,7 @@ export function updateWhisperBar() {
   if (!bar) {
     bar = document.createElement("div");
     bar.className = BAR_CLASS;
-    bar.innerHTML = `<i class="fa-solid fa-user-secret"></i><a class="gct-wb-label"></a><span class="gct-wb-who"></span><a class="gct-wb-clear"><i class="fa-solid fa-xmark"></i></a>`;
+    bar.innerHTML = `<i class="fa-solid fa-paper-plane"></i><a class="gct-wb-label"></a><span class="gct-wb-who"></span><a class="gct-wb-clear"><i class="fa-solid fa-xmark"></i></a>`;
     bar.querySelector(".gct-wb-label").addEventListener("click", () => openWhisperDialog());
     bar.querySelector(".gct-wb-clear").addEventListener("click", () => clearWhisperTarget());
     bar.querySelector(".gct-wb-clear").dataset.tooltip = L("Whisper.Clear");

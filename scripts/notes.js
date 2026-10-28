@@ -1,5 +1,6 @@
 import { MODULE_ID, L, mod, isNote, fmtDateTime } from "./constants.js";
-import { SingletonMixin, addChatControl, debounce, esc, formDialog, htmlRoot, userFlagStore, wrapMethod } from "./lib.js";
+import { SingletonMixin, debounce, esc, formDialog, htmlRoot, userFlagStore, wrapMethod } from "./lib.js";
+import { addToolsButton } from "./chat-controls.js";
 import { htmlToPlain } from "./chat-input.js";
 import { bindComposer, keepScroll, shortTime, userColor } from "./panel.js";
 
@@ -279,9 +280,9 @@ export async function exportNotesToJournal() {
 /*  Hooks                                       */
 /* -------------------------------------------- */
 
-/** The chat-controls button (idempotent). */
+/** The button on the module's chat-controls row (idempotent). */
 export function injectNotesButton() {
-  addChatControl({ cls: "gct-open-notes", icon: "fa-solid fa-note-sticky", label: L("Notes.Title"), onClick: () => NotesPanel.toggle() });
+  addToolsButton({ cls: "gct-open-notes", icon: "fa-solid fa-note-sticky", label: L("Notes.Title"), onClick: () => NotesPanel.toggle() });
 }
 
 const refreshPanel = debounce(() => NotesPanel.instance?.refreshList(), 50);
