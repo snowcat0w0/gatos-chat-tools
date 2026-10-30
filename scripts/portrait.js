@@ -91,7 +91,10 @@ export function applyPortrait(message, li) {
   el.className = `gct-portrait ${setting("portraitShape")}`;
   el.src = img;
   el.alt = message.alias ?? "";
-  el.loading = "lazy";
+  // Never lazy: the core ChatLog#scrollBottom({waitImages}) waits for every <img> in the log that is not
+  // `complete`, and a lazy image outside the viewport never loads, so the auto-scroll would wait forever.
+  el.loading = "eager";
+  el.decoding = "async";
   el.dataset.tooltip = label ? `${message.alias ?? ""} · ${label}` : message.alias ?? "";
   if (actor?.testUserPermission?.(game.user, "LIMITED")) {
     el.classList.add("clickable");
