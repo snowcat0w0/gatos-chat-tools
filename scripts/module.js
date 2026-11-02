@@ -9,7 +9,7 @@ import { registerViewerAction } from "./viewer-actions.js";
 import { ChatArchiveViewer, openSaveDialog, openDeleteDialog, injectChatButton, onBookmarksChanged, onChatMessageCountChanged } from "./viewer.js";
 import { getSession, startSession, endSession, openStartSessionDialog, openEndSessionDialog, scheduleAutoArchive, onReadyAutoArchive, autoArchiveByCount } from "./session.js";
 import { bookmarkStore, getBookmarks, setBookmarks, toggleBookmark, isHighlighted, toggleHighlight, onRenderChatMessageBookmark, onGetChatMessageContextOptionsBookmark } from "./bookmarks.js";
-import { moveMessage, duplicateMessage, setMessageTimestamp, resortMessages, onUpdateChatMessageOrder, onCreateChatMessageOrder, onGetChatMessageContextOptionsReorder } from "./reorder.js";
+import { moveMessage, duplicateMessage, setMessageTimestamp, resortMessages, onUpdateChatMessageOrder, onCreateChatMessageOrder, onPreCreateChatMessageTimestamp, onGetChatMessageContextOptionsReorder } from "./reorder.js";
 import { onRenderChatMessagePortrait, onPreCreateChatMessage, portraitFor, refreshPortraits, lookupPortrait, registerPortraitProvider } from "./portrait.js";
 import { onChatMessage, onRenderChatMessageChitchat, applyChitchatCssVars, matchChitchat, isChitchat } from "./chitchat.js";
 import { scheduleRegroup, regroupAll } from "./grouping.js";
@@ -188,6 +188,7 @@ Hooks.on("preCreateChatMessage", onPreCreateSpeakerOverride);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessage);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageFontStyle);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageRuby);
+Hooks.on("preCreateChatMessage", onPreCreateChatMessageTimestamp);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageFontStyle);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageRuby);
 
