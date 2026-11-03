@@ -50,19 +50,25 @@ export function onUpdateChatMessageOrder(message, changes) {
   scheduleRegroup();
 }
 
+/** The last timestamp onPreCreateChatMessageTimestamp gave out on this client. */
+let lastStamped = 0;
+
 /**
  * preCreateChatMessage (runs on the sender's client): never date a new message before the newest one.
  * Foundry stamps messages with the sender's own clock (Date.now()) and the server keeps no wall clock of
  * its own, so a player whose clock runs behind lands above messages sent before theirs, live
  * (onCreateChatMessageOrder) and after a reload. An explicit timestamp (duplicates, imports) is kept.
+ * Equal timestamps are avoided as well: the server breaks ties at random when the world loads.
  */
 export function onPreCreateChatMessageTimestamp(message, data) {
   if (data && "timestamp" in data) return;
   const now = message.timestamp || Date.now();
   // The collection is in creation order until something re-sorts it: look at the last few.
   const newest = Math.max(0, ...game.messages.contents.slice(-20).map((m) => m.timestamp ?? 0));
-  if (newest < now) return;
-  message.updateSource({ timestamp: newest + 1 });
+  // Messages sent in quick succession are not in the collection yet: count those this client stamped.
+  const ts = Math.max(now, newest + 1, lastStamped + 1);
+  lastStamped = ts;
+  if (ts !== message.timestamp) message.updateSource({ timestamp: ts });
 }
 
 /** createChatMessage: a message created with an older timestamp (a duplicate) is moved into place. */
