@@ -419,6 +419,10 @@ mark.gct-hl {
 .chat-message ruby, .gct-viewer ruby { ruby-align: center; }
 .chat-message rt, .gct-viewer rt { font-size: 0.6em; line-height: 1; opacity: 0.85; }
 
+/* ---- Divider (`---` line) ---- */
+/* Core's <hr> is a light gradient made for dark panels; follow the message's text colour instead. */
+.chat-message hr.gct-divider, .gct-viewer hr.gct-divider { height: 0; margin: 0.4em 0; border: none; border-top: 1px solid; color: inherit; background: none; opacity: 0.45; }
+
 /* ---- Sessions ---- */
 .chat-message.gct-marker {
   background: transparent;

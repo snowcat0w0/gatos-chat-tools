@@ -15,6 +15,7 @@ import { onChatMessage, onRenderChatMessageChitchat, applyChitchatCssVars, match
 import { scheduleRegroup, regroupAll } from "./grouping.js";
 import { applyChatTheme } from "./chat-theme.js";
 import { markupToRuby, rubyToMarkup, onPreCreateChatMessageRuby, onPreUpdateChatMessageRuby } from "./ruby.js";
+import { onPreCreateChatMessageDivider, onPreUpdateChatMessageDivider } from "./divider.js";
 import { registerChatImagesCompat } from "./compat-chat-images.js";
 import { registerImageHooks, imagesApi } from "./images.js";
 import { onChatMessageWhisper, registerWhisperHooks, getWhisperTarget, setWhisperTarget, clearWhisperTarget, openWhisperDialog, resolveRecipients, tokenOwners, sendWithTarget } from "./whisper.js";
@@ -188,9 +189,11 @@ Hooks.on("preCreateChatMessage", onPreCreateSpeakerOverride);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessage);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageFontStyle);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageRuby);
+Hooks.on("preCreateChatMessage", onPreCreateChatMessageDivider);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageTimestamp);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageFontStyle);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageRuby);
+Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageDivider);
 
 // Message rendering: notes hidden first, chitchat markup, portrait, edit/delete buttons, then grouping once inserted.
 Hooks.on("renderChatMessageHTML", onRenderChatMessageNote);
