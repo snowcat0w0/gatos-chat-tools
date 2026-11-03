@@ -4,6 +4,7 @@ import { setting } from "./settings.js";
 import { portraitFlagUpdate } from "./portrait.js";
 import { isChitchat } from "./chitchat.js";
 import { markupToRuby, rubyToMarkup } from "./ruby.js";
+import { markupToDivider, dividerToMarkup } from "./divider.js";
 import { fontStylesToMarkup } from "./font-styles-markup.js";
 import { convertFontStyles } from "./font-styles.js";
 import { toLocalInput, setMessageTimestamp } from "./reorder.js";
@@ -112,7 +113,7 @@ export async function openEditDialog(message) {
     chitchat,
     isGM: game.user.isGM,
     timestamp: toLocalInput(message.timestamp),
-    content: rubyToMarkup(fontStylesToMarkup(message.content ?? "")),
+    content: dividerToMarkup(rubyToMarkup(fontStylesToMarkup(message.content ?? ""))),
     flavor: message.flavor ?? "",
     alias,
     noActor: !currentActorId,
@@ -133,7 +134,7 @@ export async function openEditDialog(message) {
 
   const update = {};
   // Same conversions as on creation; unknown style names stay as markup (preUpdateChatMessage warns about them).
-  const newContent = markupToRuby(convertFontStyles(result.content ?? "").html);
+  const newContent = markupToDivider(markupToRuby(convertFontStyles(result.content ?? "").html));
   if (newContent !== (message.content ?? "")) update.content = newContent;
   const newFlavor = (result.flavor ?? "").trim();
   if (newFlavor !== (message.flavor ?? "")) update.flavor = newFlavor;

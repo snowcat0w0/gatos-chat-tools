@@ -15,6 +15,8 @@ export function htmlToText(html) {
   const root = doc.getElementById("root");
   root.querySelectorAll(".dice-tooltip, script, style, template").forEach((e) => e.remove());
   root.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
+  // Blank lines around it, so Markdown reads a rule and not a heading underline.
+  root.querySelectorAll("hr").forEach((hr) => hr.replaceWith("\n\n---\n\n"));
   root.querySelectorAll("td, th").forEach((c) => c.append("\t"));
   root.querySelectorAll("*").forEach((el) => {
     if (BLOCK_TAGS.has(el.tagName)) {
