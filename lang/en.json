@@ -283,12 +283,20 @@
     "SpeakerBar": {
       "LockTooltip": "Lock / unlock speaker",
       "ResetTooltip": "Back to default speaker (unlock)",
-      "AddTooltip": "Add current speaker to favourites",
+      "AddTooltip": "Add a speaker (pick from the list, or drop an actor on the bar)",
+      "ChipTooltip": "{name} (right-click: remove)",
       "Locked": "Speaker locked to '{name}'.",
       "Unlocked": "Speaker unlocked.",
       "NothingToLock": "No speaker to lock. Select a token or assign a character.",
       "FavDuplicate": "That speaker is already a favourite.",
-      "FavFull": "Favourites are full (max 12)."
+      "FavFull": "Favourites are full (max {max}).",
+      "PickerTitle": "Add a speaker",
+      "PickerSearch": "Search by name",
+      "PickerCurrent": "Current speaker",
+      "PickerEmpty": "No actors to pick.",
+      "PickerHint": "Click to add; click a ticked one again to remove it. You can also drop an actor from the sidebar on the speaker bar.",
+      "WorldActorsOnly": "Only world actors can be added.",
+      "NotOwner": "You do not own '{name}'."
     },
     "ExportDialog": {
       "Title": "Export Chat Log",
