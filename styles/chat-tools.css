@@ -278,7 +278,9 @@ mark.gct-hl {
   transition: opacity 0.15s;
 }
 .chat-message.gct-cont:hover > .message-header .message-metadata { opacity: 1; }
-.chat-message.gct-cont:not(.gct-chitchat) > .message-header:not(:has(.flavor-text)):not(:has(.whisper-to)) {
+/* A group shares one whisper target (it is part of the group key), so only its first card says "To: …". */
+.chat-message.gct-cont > .message-header .whisper-to { display: none; }
+.chat-message.gct-cont:not(.gct-chitchat) > .message-header:not(:has(.flavor-text)) {
   position: absolute;
   top: 0;
   right: 6px;
