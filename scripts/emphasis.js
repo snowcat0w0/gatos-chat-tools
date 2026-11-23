@@ -153,3 +153,69 @@ export function onPreCreateChatMessageEmphasis(message) {
   const converted = markupToEmphasis(content);
   if (converted !== content) message.updateSource({ content: converted });
 }
+
+/* -------------------------------------------- */
+/*  Markdown export                             */
+/* -------------------------------------------- */
+
+/**
+ * Private-use characters the export puts around emphasised text while the HTML is flattened to plain text
+ * (export.js htmlToText). `marksToMarkdown` turns them into Markdown afterwards.
+ */
+const mark = (offset) => String.fromCharCode(0xe000 + offset); // written as code points: no invisible characters in the source
+export const MD_MARK = { emOpen: mark(0), emClose: mark(1), strongOpen: mark(2), strongClose: mark(3) };
+
+const MARKS = new RegExp(`([${mark(0)}-${mark(3)}])`);
+const PUNCT = /[\p{P}\p{S}]/u;
+const isSpace = (ch) => ch === "" || /\s/.test(ch);
+
+/**
+ * Turn MD_MARK pairs into `*…*` / `**…**` and pass every other piece of text through `escape`.
+ * A pair CommonMark would not read as emphasis (a quote or bracket just inside the marks with a letter just
+ * outside, as in `**"안녕"**이라고`, or two emphases touching) is written as <em> / <strong> tags instead,
+ * which Markdown renders the same. Empty pairs, pairs across a blank line and stray marks are dropped.
+ */
+export function marksToMarkdown(text, escape = (s) => s) {
+  const parts = String(text ?? "").split(MARKS); // odd indices are marks
+  if (parts.length === 1) return escape(parts[0]);
+  const code = (i) => parts[i].charCodeAt(0) - 0xe000; // 0 em open, 1 em close, 2 strong open, 3 strong close
+  const isMark = (i, kinds) => i > 0 && i < parts.length && kinds.includes(code(i));
+  const charBefore = (i) => {
+    for (let j = i - 1; j >= 0; j -= 2) if (parts[j]) return parts[j][parts[j].length - 1];
+    return "";
+  };
+  const charAfter = (i) => {
+    for (let j = i + 1; j < parts.length; j += 2) if (parts[j]) return parts[j][0];
+    return "";
+  };
+
+  const out = new Array(parts.length).fill("");
+  const open = [];
+  for (let i = 1; i < parts.length; i += 2) {
+    if (code(i) % 2 === 0) {
+      open.push(i);
+      continue;
+    }
+    const o = open.length && code(open[open.length - 1]) === code(i) - 1 ? open.pop() : -1;
+    if (o < 0) continue;
+    let inner = "";
+    for (let j = o + 1; j < i; j += 2) inner += parts[j];
+    if (!inner.trim() || /\n[ \t]*\n/.test(inner)) continue;
+
+    const first = charAfter(o);
+    const last = charBefore(i);
+    const prev = charBefore(o);
+    const next = charAfter(i);
+    const opens = !isSpace(first) && (!PUNCT.test(first) || isSpace(prev) || PUNCT.test(prev));
+    const closes = !isSpace(last) && (!PUNCT.test(last) || isSpace(next) || PUNCT.test(next));
+    // Another emphasis ending right before this one or starting right after it: the runs of `*` would merge.
+    const touching = (parts[o - 1] === "" && isMark(o - 2, [1, 3])) || (parts[i + 1] === "" && isMark(i + 2, [0, 2]));
+    const strong = code(i) === 3;
+    if (opens && closes && !touching) out[o] = out[i] = strong ? "**" : "*";
+    else {
+      out[o] = strong ? "<strong>" : "<em>";
+      out[i] = strong ? "</strong>" : "</em>";
+    }
+  }
+  return parts.map((p, i) => (i % 2 ? out[i] : escape(p))).join("");
+}

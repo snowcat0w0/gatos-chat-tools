@@ -5,15 +5,43 @@ import { groupSerialized } from "./grouping.js";
 import { pastelOf, stripChitchatMarkup } from "./chitchat.js";
 import { buildZip } from "./zip.js";
 import { KOREAN_WEB_FONTS_URL, koreanWebFontsOn } from "./fonts.js";
+import { MD_MARK, marksToMarkdown } from "./emphasis.js";
 
 const BLOCK_TAGS = new Set(["P", "DIV", "LI", "UL", "OL", "H1", "H2", "H3", "H4", "H5", "H6", "TR", "TABLE", "SECTION", "HEADER", "FOOTER", "BLOCKQUOTE", "PRE", "HR"]);
 
-/** Convert a fragment of chat HTML to readable plain text. */
-export function htmlToText(html) {
+/**
+ * Put MD_MARK characters around the text of every <em>/<i> and <strong>/<b>, inside its leading and trailing
+ * white space. Innermost elements first, so nested marks nest. An element inside one of its own kind and an
+ * element without text (icons) are skipped.
+ */
+function markEmphasis(root) {
+  for (const el of [...root.querySelectorAll("em, i, strong, b")].reverse()) {
+    const strong = el.tagName === "STRONG" || el.tagName === "B";
+    if (el.parentElement?.closest(strong ? "strong, b" : "em, i")) continue;
+    const walker = root.ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let first = null;
+    let last = null;
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!/\S/.test(node.data)) continue;
+      first ??= node;
+      last = node;
+    }
+    if (!first) continue;
+    last.data = last.data.replace(/\s*$/, (ws) => (strong ? MD_MARK.strongClose : MD_MARK.emClose) + ws);
+    first.data = first.data.replace(/^\s*/, (ws) => ws + (strong ? MD_MARK.strongOpen : MD_MARK.emOpen));
+  }
+}
+
+/**
+ * Convert a fragment of chat HTML to readable plain text. With `emphasis`, italic and bold text is kept inside
+ * MD_MARK characters for `marksToMarkdown` (the Markdown export).
+ */
+export function htmlToText(html, { emphasis = false } = {}) {
   if (!html) return "";
   const doc = new DOMParser().parseFromString(`<div id="root">${html}</div>`, "text/html");
   const root = doc.getElementById("root");
   root.querySelectorAll(".dice-tooltip, script, style, template").forEach((e) => e.remove());
+  if (emphasis) markEmphasis(root);
   root.querySelectorAll("br").forEach((br) => br.replaceWith("\n"));
   // Blank lines around it, so Markdown reads a rule and not a heading underline.
   root.querySelectorAll("hr").forEach((hr) => hr.replaceWith("\n\n---\n\n"));
@@ -121,13 +149,15 @@ export function toMarkdown(messages, { title, source, diceDetails: withDice = fa
       lastDay = day;
     }
     const time = fmtDateTime(m.timestamp).slice(11, 16);
-    const body = htmlToText(m.chitchat ? stripChitchatMarkup(m.html || m.content) : m.html || m.content);
+    const html = m.chitchat ? stripChitchatMarkup(m.html || m.content) : m.html || m.content;
     if (m.sessionMarker) {
-      lines.push(`---`, ``, `**${mdEscape(body)}** · ${time}`, ``, `---`, "");
+      lines.push(`---`, ``, `**${mdEscape(htmlToText(html))}** · ${time}`, ``, `---`, "");
       continue;
     }
+    // Already escaped; the message's italic and bold text stays `*italic*` / `**bold**`.
+    const body = marksToMarkdown(htmlToText(html, { emphasis: true }), mdEscape);
     if (m.chitchat) {
-      lines.push(`- *${mdEscape(m.user || m.alias)}*: ${mdEscape(body).replace(/\n/g, " ")} <sub>${time}</sub>`, "");
+      lines.push(`- *${mdEscape(m.user || m.alias)}*: ${body.replace(/\n/g, " ")} <sub>${time}</sub>`, "");
       continue;
     }
     const secret = secretLabel(m);
@@ -135,7 +165,7 @@ export function toMarkdown(messages, { title, source, diceDetails: withDice = fa
     lines.push(`**${mdEscape(m.alias || m.user)}**${user} · ${time}${secret ? ` · _${mdEscape(secret)}_` : ""}${m.highlight ? " ★" : ""}  `);
     const flavor = htmlToText(m.flavor);
     if (flavor) lines.push(`*${mdEscape(flavor).replace(/\n/g, " ")}*  `);
-    if (body) lines.push(mdEscape(body).replace(/\n/g, "  \n"));
+    if (body) lines.push(body.replace(/\n/g, "  \n"));
     if (withDice) for (const d of diceDetails(m.html || m.content)) lines.push(`> 🎲 ${mdEscape(d)}`);
     lines.push("");
   }
