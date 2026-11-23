@@ -183,7 +183,7 @@
       "AliasHint": "Leave blank to use the actor (or user) name",
       "Flavor": "Flavor text",
       "Content": "Content (HTML)",
-      "ContentHint": "Edits the raw HTML of the message body. For plain messages, just change the text. Ruby text is written as [[base|reading]].",
+      "ContentHint": "Edits the raw HTML of the message body. For plain messages, just change the text. Ruby text is written as [[base|reading]]; italic, bold and bold italic as *text*, **text**, ***text***.",
       "Saved": "Message updated.",
       "NoPermission": "You do not have permission to edit this message.",
       "ChitchatNote": "Chitchat is always shown under the sending player's name; the speaker cannot be changed.",

@@ -16,6 +16,7 @@ import { scheduleRegroup, regroupAll } from "./grouping.js";
 import { applyChatTheme } from "./chat-theme.js";
 import { markupToRuby, rubyToMarkup, onPreCreateChatMessageRuby, onPreUpdateChatMessageRuby } from "./ruby.js";
 import { onPreCreateChatMessageDivider, onPreUpdateChatMessageDivider } from "./divider.js";
+import { markupToEmphasis, emphasisToMarkup, onPreCreateChatMessageEmphasis } from "./emphasis.js";
 import { registerChatImagesCompat } from "./compat-chat-images.js";
 import { registerImageHooks, imagesApi } from "./images.js";
 import { onChatMessageWhisper, registerWhisperHooks, getWhisperTarget, setWhisperTarget, clearWhisperTarget, openWhisperDialog, resolveRecipients, tokenOwners, sendWithTarget } from "./whisper.js";
@@ -135,6 +136,8 @@ Hooks.once("init", () => {
     isChitchat,
     markupToRuby,
     rubyToMarkup,
+    markupToEmphasis,
+    emphasisToMarkup,
     regroupAll,
     resolveCurrentSpeaker,
     getLockedSpeaker,
@@ -190,6 +193,7 @@ Hooks.on("preCreateChatMessage", onPreCreateChatMessage);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageFontStyle);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageRuby);
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageDivider);
+Hooks.on("preCreateChatMessage", onPreCreateChatMessageEmphasis); // last: sees the HTML the others produced
 Hooks.on("preCreateChatMessage", onPreCreateChatMessageTimestamp);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageFontStyle);
 Hooks.on("preUpdateChatMessage", onPreUpdateChatMessageRuby);

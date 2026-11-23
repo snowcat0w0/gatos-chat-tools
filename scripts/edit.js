@@ -5,6 +5,7 @@ import { portraitFlagUpdate } from "./portrait.js";
 import { isChitchat } from "./chitchat.js";
 import { markupToRuby, rubyToMarkup } from "./ruby.js";
 import { markupToDivider, dividerToMarkup } from "./divider.js";
+import { markupToEmphasis, emphasisToMarkup, isPlainMessageHtml } from "./emphasis.js";
 import { fontStylesToMarkup } from "./font-styles-markup.js";
 import { convertFontStyles } from "./font-styles.js";
 import { toLocalInput, setMessageTimestamp } from "./reorder.js";
@@ -109,11 +110,13 @@ export async function openEditDialog(message) {
   const alias = speaker.alias && speaker.alias !== defaultAlias ? speaker.alias : "";
 
   const chitchat = isChitchat(message);
+  // `*` emphasis markup only for written messages, never for rolls or system cards.
+  const emphasis = !message.rolls?.length && isPlainMessageHtml(message.content ?? "");
   const content = await renderTemplate(TEMPLATES.edit, {
     chitchat,
     isGM: game.user.isGM,
     timestamp: toLocalInput(message.timestamp),
-    content: dividerToMarkup(rubyToMarkup(fontStylesToMarkup(message.content ?? ""))),
+    content: dividerToMarkup(rubyToMarkup(fontStylesToMarkup(emphasis ? emphasisToMarkup(message.content ?? "") : message.content ?? ""))),
     flavor: message.flavor ?? "",
     alias,
     noActor: !currentActorId,
@@ -134,7 +137,8 @@ export async function openEditDialog(message) {
 
   const update = {};
   // Same conversions as on creation; unknown style names stay as markup (preUpdateChatMessage warns about them).
-  const newContent = markupToDivider(markupToRuby(convertFontStyles(result.content ?? "").html));
+  const converted = markupToDivider(markupToRuby(convertFontStyles(result.content ?? "").html));
+  const newContent = emphasis ? markupToEmphasis(converted) : converted;
   if (newContent !== (message.content ?? "")) update.content = newContent;
   const newFlavor = (result.flavor ?? "").trim();
   if (newFlavor !== (message.flavor ?? "")) update.flavor = newFlavor;
