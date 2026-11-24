@@ -246,6 +246,13 @@
       "RegexHint": "정규식으로 검색 (대소문자 무시)",
       "PrevMatch": "이전 일치 (Shift+Enter)",
       "NextMatch": "다음 일치 (Enter)",
+      "ShowContext": "앞뒤 대화 보기",
+      "BackToResults": "검색 결과로",
+      "ContextLabel": "앞뒤 대화를 보는 중이에요. 검색·필터는 잠시 꺼 두었어요.",
+      "ContextHit": "결과 {index} / {total}",
+      "PrevHit": "이전 결과로 이동",
+      "NextHit": "다음 결과로 이동",
+      "LoadEarlier": "앞 메시지 더 보기",
       "Kind": {
         "all": "모든 종류",
         "rolls": "굴림",

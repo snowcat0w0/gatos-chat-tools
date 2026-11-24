@@ -246,6 +246,13 @@
       "RegexHint": "Search with a regular expression (case-insensitive)",
       "PrevMatch": "Previous match (Shift+Enter)",
       "NextMatch": "Next match (Enter)",
+      "ShowContext": "Show in context",
+      "BackToResults": "Back to results",
+      "ContextLabel": "Showing the surrounding messages. Search and filters are paused.",
+      "ContextHit": "Result {index} / {total}",
+      "PrevHit": "Go to the previous result",
+      "NextHit": "Go to the next result",
+      "LoadEarlier": "Load earlier messages",
       "Kind": {
         "all": "All kinds",
         "rolls": "Rolls",

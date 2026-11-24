@@ -32,6 +32,8 @@ import { viewerActions, getViewerAction } from "./viewer-actions.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 const PAGE = 200;
+/** Messages shown before the target when a search result is opened in context. */
+const CONTEXT_BEFORE = 80;
 
 /** The one viewer object of this session (0.5.2 kept it in a static field, so filters and source survive close/open). */
 let kept = null;
@@ -66,6 +68,11 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
       endSession: ChatArchiveViewer.#onEndSession,
       exportDialog: ChatArchiveViewer.#onExportDialog,
       loadMore: ChatArchiveViewer.#onLoadMore,
+      loadEarlier: ChatArchiveViewer.#onLoadEarlier,
+      showContext: ChatArchiveViewer.#onShowContext,
+      exitContext: ChatArchiveViewer.#onExitContext,
+      contextPrev: ChatArchiveViewer.#onContextPrev,
+      contextNext: ChatArchiveViewer.#onContextNext,
       jumpTo: ChatArchiveViewer.#onJumpTo,
       toggleBookmark: ChatArchiveViewer.#onToggleBookmark,
       searchPrev: ChatArchiveViewer.#onSearchPrev,
@@ -103,6 +110,13 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
   limit = PAGE;
   selectMode = false;
   selected = new Set();
+  /**
+   * Set while a search result is shown in its surroundings: the filters are suspended and the list is a window
+   * of the whole source around message `id`. `offset`/`limit` are that window (`offset` null = not placed yet),
+   * `jump` asks the next refresh to centre and flash the target, `back` restores the result list on return.
+   * @type {{id: string, offset: number|null, limit: number, jump: boolean, back: {limit: number, delta: number}}|null}
+   */
+  context = null;
 
   /** Cache of live-message search text and rendered HTML, keyed by message id. */
   #liveText = new Map();
@@ -113,6 +127,9 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
   #marks = [];
   #markIndex = -1;
   #lastClicked = null;
+  /** Ids of the messages matching the filters, in order, while a context view is open. */
+  #hits = [];
+  #settle = null;
 
   get includeChitchat() {
     return setting("viewerIncludeChitchat");
@@ -172,7 +189,7 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
       clearTimeout(this.#searchTimer);
       this.#searchTimer = setTimeout(() => {
         this.query = search.value;
-        this.limit = PAGE;
+        this.#resetView();
         this.refresh();
       }, 250);
     });
@@ -184,7 +201,7 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     const bind = (selector, prop, transform = (v) => v) => {
       el.querySelector(selector)?.addEventListener("change", (ev) => {
         this[prop] = transform(ev.currentTarget);
-        this.limit = PAGE;
+        this.#resetView();
         this.refresh();
       });
     };
@@ -196,7 +213,9 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     bind("input[name=to]", "to", (t) => t.value);
     el.querySelector("input[name=chitchat]")?.addEventListener("change", async (ev) => {
       await game.settings.set(MODULE_ID, "viewerIncludeChitchat", ev.currentTarget.checked);
-      this.limit = PAGE;
+      // The chitchat toggle is a display choice, not a filter: a context view stays open and is placed again.
+      if (this.context) Object.assign(this.context, { offset: null, jump: true });
+      else this.limit = PAGE;
       this.refresh();
     });
     el.querySelector(".gct-import-input")?.addEventListener("change", (ev) => this.#import(ev.currentTarget));
@@ -215,6 +234,15 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
       else this.selected.delete(id);
       this.#lastClicked = id;
       this.#updateSelectBar();
+    });
+    // Filtered list: clicking a card shows that message among its neighbours.
+    el.querySelector(".gct-results")?.addEventListener("click", (ev) => {
+      if (ev.button !== 0 || ev.defaultPrevented || this.context || this.selectMode || !this.#isFiltered()) return;
+      if (ev.target.closest("a, button, input, select, textarea, summary, label, [data-action]")) return;
+      // A drag that selected text (to copy it) is not a click on the card.
+      if (!window.getSelection()?.isCollapsed) return;
+      const li = ev.target.closest("li.gct-msg[data-message-id]");
+      if (li) this.#openContext(li);
     });
     await this.refresh({ speakers: true });
   }
@@ -283,6 +311,17 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     }
   }
 
+  /** True when a search or filter hides part of the source, so a listed message may be missing its neighbours. */
+  #isFiltered() {
+    return !!(this.#pattern() || this.speaker || this.user || this.kind || this.from || this.to);
+  }
+
+  /** A filter changed: back to the first page of the filtered list. */
+  #resetView() {
+    this.limit = PAGE;
+    this.context = null;
+  }
+
   #applyFilters(messages) {
     const pattern = this.#pattern();
     const re = pattern ? new RegExp(pattern, "imu") : null;
@@ -327,20 +366,41 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
   /*  Results rendering                           */
   /* -------------------------------------------- */
 
-  /** Recompute the filtered list and redraw the results pane. */
-  async refresh({ speakers = false } = {}) {
+  /**
+   * Recompute the filtered list and redraw the results pane.
+   * @param {object} [options]
+   * @param {boolean} [options.speakers]  Refill the speaker/user selects.
+   * @param {true|{id: string, delta: number}|null} [options.keep]  Keep the scroll position: `true` keeps the card
+   *   now at the top where it is, an object puts message `id` at `delta` px from the top. Otherwise the list starts
+   *   at the top (or, in a context view, on its target).
+   */
+  async refresh({ speakers = false, keep = null } = {}) {
     const el = this.element;
     if (!el) return;
     const results = el.querySelector(".gct-results");
     if (!results) return;
+    this.#settle?.abort();
+    if (keep === true) keep = this.#anchor(results);
     results.innerHTML = `<li class="gct-empty">${L("Viewer.Loading")}</li>`;
 
     const all = await this.#getMessages();
     if (speakers) this.#fillFilters(all);
-    this.#filtered = this.#applyFilters(all);
-    const slice = this.#filtered.slice(0, this.limit);
+    const matches = this.#applyFilters(all);
+    let offset = 0;
+    let limit = this.limit;
+    const ctx = this.#placeContext(all, matches);
+    if (ctx) {
+      this.#filtered = ctx.list;
+      this.#hits = matches.map((m) => m.id);
+      ({ offset, limit } = this.context);
+    } else {
+      this.#filtered = matches;
+      this.#hits = [];
+    }
+    const slice = this.#filtered.slice(offset, offset + limit);
     this.#shown = slice;
     await this.#hydrate(slice);
+    const filtered = !ctx && this.#isFiltered();
 
     const live = this.source === "live";
     const groups = groupSerialized(slice);
@@ -349,6 +409,8 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     const bookmarks = getBookmarks();
     const html = await renderTemplate(TEMPLATES.messages, {
       live,
+      filtered,
+      earlier: offset,
       portraitShape: setting("portraitShape"),
       portraitSize: setting("portraitSize"),
       messages: slice.map((m, i) => {
@@ -387,10 +449,11 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
             .join(" "),
         };
       }),
-      hasMore: this.#filtered.length > slice.length,
-      remaining: this.#filtered.length - slice.length,
+      hasMore: this.#filtered.length > offset + slice.length,
+      remaining: this.#filtered.length - offset - slice.length,
     });
     results.innerHTML = html;
+    results.classList.toggle("gct-clickable", filtered);
     this.#insertDayDividers(results);
 
     const pattern = this.#pattern();
@@ -403,6 +466,149 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     const count = el.querySelector(".gct-count");
     if (count) count.textContent = L("Viewer.Count", { shown: this.#filtered.length, total: all.length });
     this.#updateSelectBar();
+    this.#updateContextBar();
+
+    const target = this.context ? findMessage(results, this.context.id) : null;
+    target?.classList.add("gct-context-target");
+    if (keep && this.#restoreAnchor(results, keep)) {
+      if (keep.flash) flash(findMessage(results, keep.id));
+    } else if (target) {
+      this.#settleOn(target);
+      if (this.context.jump) flash(target);
+    } else results.scrollTop = 0;
+    if (this.context) this.context.jump = false;
+  }
+
+  /* -------------------------------------------- */
+  /*  Context view (a search result among its neighbours) */
+  /* -------------------------------------------- */
+
+  /**
+   * Resolve the context view against the freshly loaded messages: returns `{list}` (the unfiltered list the window
+   * is cut from) or null when no context view is open or its message is gone.
+   */
+  #placeContext(all, matches) {
+    const ctx = this.context;
+    if (!ctx) return null;
+    const target = all.find((m) => m.id === ctx.id);
+    // Chitchat stays hidden unless the checkbox shows it or the target itself is chitchat.
+    const list = this.includeChitchat || target?.chitchat ? all : all.filter((m) => !m.chitchat);
+    const index = target ? list.indexOf(target) : -1;
+    if (index < 0) {
+      this.context = null;
+      return null;
+    }
+    if (ctx.offset == null || index < ctx.offset || index >= ctx.offset + ctx.limit) {
+      ctx.offset = Math.max(0, index - CONTEXT_BEFORE);
+      ctx.limit = PAGE;
+    }
+    return { list, index, hit: matches.indexOf(target) };
+  }
+
+  /** Show the message of a result card among its neighbours. */
+  #openContext(li) {
+    const results = li.closest(".gct-results");
+    this.context = {
+      id: li.dataset.messageId,
+      offset: null,
+      limit: PAGE,
+      jump: true,
+      back: { limit: this.limit, delta: li.getBoundingClientRect().top - results.getBoundingClientRect().top },
+    };
+    return this.refresh();
+  }
+
+  /** Back to the result list, on the result the context view was showing last. */
+  #closeContext() {
+    const ctx = this.context;
+    if (!ctx) return;
+    this.context = null;
+    const hit = this.#hits.indexOf(ctx.id);
+    this.limit = Math.max(ctx.back.limit, Math.ceil((hit + 1) / PAGE) * PAGE);
+    return this.refresh({ keep: { id: ctx.id, delta: ctx.back.delta, flash: true } });
+  }
+
+  /** Move the context view to the previous/next search result. */
+  #stepContext(dir) {
+    const ctx = this.context;
+    if (!ctx || !this.#hits.length) return;
+    const at = this.#hits.indexOf(ctx.id);
+    const next = at < 0 ? (dir > 0 ? 0 : this.#hits.length - 1) : at + dir;
+    if (next < 0 || next >= this.#hits.length) return;
+    ctx.id = this.#hits[next];
+    ctx.jump = true;
+    return this.refresh();
+  }
+
+  #updateContextBar() {
+    const el = this.element;
+    const bar = el?.querySelector(".gct-contextbar");
+    if (!bar) return;
+    const ctx = this.context;
+    bar.hidden = !ctx;
+    el.classList.toggle("gct-context-mode", !!ctx);
+    if (!ctx) return;
+    const at = this.#hits.indexOf(ctx.id);
+    const total = this.#hits.length;
+    bar.querySelector(".gct-context-pos").textContent = total ? L("Viewer.ContextHit", { index: at + 1 || "–", total }) : "";
+    bar.querySelector("[data-action=contextPrev]").disabled = !total || at === 0;
+    bar.querySelector("[data-action=contextNext]").disabled = !total || at === total - 1;
+  }
+
+  /** The first card that reaches into the visible part of the list, and where its top sits. */
+  #anchor(results) {
+    const top = results.getBoundingClientRect().top;
+    for (const li of results.querySelectorAll("li.gct-msg[data-message-id]")) {
+      const r = li.getBoundingClientRect();
+      if (r.bottom > top) return { id: li.dataset.messageId, delta: r.top - top };
+    }
+    return null;
+  }
+
+  #restoreAnchor(results, { id, delta }) {
+    const li = findMessage(results, id);
+    if (!li) return false;
+    results.scrollTop += li.getBoundingClientRect().top - results.getBoundingClientRect().top - delta;
+    return true;
+  }
+
+  /** Centre a card and keep it centred while late images above it change the layout, until the user scrolls. */
+  #settleOn(li) {
+    const results = li.parentElement;
+    const centre = () => li.scrollIntoView({ block: "center" });
+    centre();
+    const ac = (this.#settle = new AbortController());
+    results.addEventListener("load", centre, { capture: true, signal: ac.signal });
+    for (const type of ["wheel", "pointerdown", "keydown", "touchstart"]) {
+      results.addEventListener(type, () => ac.abort(), { signal: ac.signal, passive: true });
+    }
+    setTimeout(() => ac.abort(), 3000);
+  }
+
+  static #onShowContext(event, target) {
+    const li = target.closest("li.gct-msg[data-message-id]");
+    if (li) this.#openContext(li);
+  }
+
+  static #onExitContext() {
+    this.#closeContext();
+  }
+
+  static #onContextPrev() {
+    this.#stepContext(-1);
+  }
+
+  static #onContextNext() {
+    this.#stepContext(1);
+  }
+
+  static async #onLoadEarlier() {
+    const ctx = this.context;
+    if (!ctx?.offset) return;
+    const n = Math.min(PAGE, ctx.offset);
+    ctx.offset -= n;
+    ctx.limit += n;
+    await this.refresh({ keep: true });
   }
 
   #insertDayDividers(results) {
@@ -516,7 +722,7 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     if (!ids.length) return;
     await setBookmarks(ids, true);
     ui.notifications.info(L("Select.Bookmarked", { count: ids.length }));
-    await this.refresh();
+    await this.refresh({ keep: true });
   }
 
   static async #onExportSelected() {
@@ -545,7 +751,7 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
   static async #onSelectSource(event, target) {
     if (event.target.closest(".gct-source-actions")) return;
     this.source = target.dataset.source;
-    this.limit = PAGE;
+    this.#resetView();
     this.speaker = "";
     this.user = "";
     this.selected.clear();
@@ -706,8 +912,9 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
   }
 
   static async #onLoadMore() {
-    this.limit += PAGE;
-    await this.refresh();
+    if (this.context) this.context.limit += PAGE;
+    else this.limit += PAGE;
+    await this.refresh({ keep: true });
   }
 
   static async #onToggleBookmark(event, target) {
@@ -726,6 +933,20 @@ export class ChatArchiveViewer extends SingletonMixin(HandlebarsApplicationMixin
     // gatos-lib: scroll + flash in the chat log (sidebar or popout), else open the message in a popout.
     jumpToMessage(id, { flashClass: "gct-flash", duration: 1600 });
   }
+}
+
+/* -------------------------------------------- */
+/*  Result cards                                */
+/* -------------------------------------------- */
+
+const findMessage = (results, id) => results.querySelector(`li.gct-msg[data-message-id="${CSS.escape(id)}"]`);
+
+function flash(li) {
+  if (!li) return;
+  li.classList.remove("gct-flash");
+  void li.offsetWidth; // restart the animation
+  li.classList.add("gct-flash");
+  setTimeout(() => li.classList.remove("gct-flash"), 1600);
 }
 
 /* -------------------------------------------- */
@@ -865,7 +1086,7 @@ export function injectChatButton() {
 /** Re-render the open viewer when the user's bookmarks change (another window, the chat context menu). */
 export function onBookmarksChanged() {
   const viewer = ChatArchiveViewer.instance;
-  if (viewer?.rendered) viewer.refresh();
+  if (viewer?.rendered) viewer.refresh({ keep: true });
 }
 
 /** Keep the session box's message count and the live count current while the viewer is open. */
