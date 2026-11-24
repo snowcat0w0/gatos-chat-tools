@@ -72,6 +72,15 @@
       {{/if}}{{/each}}
       <button type="button" class="gct-danger" data-action="deleteSelected" data-needs-selection><i class="fa-solid fa-trash"></i> {{localize "GCT.Select.Delete"}}</button>
     </div>
+    <div class="gct-contextbar" hidden>
+      <button type="button" data-action="exitContext"><i class="fa-solid fa-arrow-left"></i> {{localize "GCT.Viewer.BackToResults"}}</button>
+      <span class="gct-context-label">{{localize "GCT.Viewer.ContextLabel"}}</span>
+      <span class="gct-context-nav">
+        <button type="button" data-action="contextPrev" data-tooltip="{{localize 'GCT.Viewer.PrevHit'}}" aria-label="{{localize 'GCT.Viewer.PrevHit'}}"><i class="fa-solid fa-chevron-up"></i></button>
+        <span class="gct-context-pos"></span>
+        <button type="button" data-action="contextNext" data-tooltip="{{localize 'GCT.Viewer.NextHit'}}" aria-label="{{localize 'GCT.Viewer.NextHit'}}"><i class="fa-solid fa-chevron-down"></i></button>
+      </span>
+    </div>
     <ol class="gct-results"></ol>
   </section>
 </div>

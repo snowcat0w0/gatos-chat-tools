@@ -1,9 +1,12 @@
+{{#if earlier}}
+<li class="gct-more gct-earlier"><button type="button" data-action="loadEarlier">{{localize "GCT.Viewer.LoadEarlier"}} ({{earlier}})</button></li>
+{{/if}}
 {{#each messages}}
 <li class="gct-msg chat-message themed theme-light {{cls}}{{#if img}} gct-has-portrait{{/if}}" data-message-id="{{id}}" data-day="{{day}}" style="--gct-portrait-size: {{../portraitSize}}px;{{#if chitchat}} --gct-cc-color: {{ccColor}}; --gct-cc-bg: {{ccBg}};{{/if}}">
   <input type="checkbox" class="gct-select" {{#if checked}}checked{{/if}} aria-label="{{localize 'GCT.Select.One'}}">
   {{#if marker}}
   <div class="gct-content message-content">{{{html}}}</div>
-  <span class="gct-msg-tools"><time class="gct-time" title="{{timeFull}}">{{time}}</time></span>
+  <span class="gct-msg-tools"><time class="gct-time" title="{{timeFull}}">{{time}}</time>{{#if ../filtered}}<a class="gct-context" data-action="showContext" data-tooltip="{{localize 'GCT.Viewer.ShowContext'}}"><i class="fa-solid fa-arrows-up-down"></i></a>{{/if}}</span>
   {{else}}
   <header class="gct-msg-header">
     {{#if img}}<img class="gct-portrait {{../portraitShape}}" src="{{img}}" alt="{{alias}}" title="{{imgTitle}}" loading="lazy">{{/if}}
@@ -13,6 +16,7 @@
     <time class="gct-time" title="{{timeFull}}">{{time}}</time>
     <span class="gct-msg-tools">
       <a class="gct-star" data-action="toggleBookmark" data-tooltip="{{#if bookmarked}}{{localize 'GCT.Bookmark.Remove'}}{{else}}{{localize 'GCT.Bookmark.Add'}}{{/if}}"><i class="{{#if bookmarked}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i></a>
+      {{#if ../filtered}}<a class="gct-context" data-action="showContext" data-tooltip="{{localize 'GCT.Viewer.ShowContext'}}"><i class="fa-solid fa-arrows-up-down"></i></a>{{/if}}
       {{#if ../live}}<a class="gct-jump" data-action="jumpTo" data-tooltip="{{localize 'GCT.Viewer.JumpTo'}}"><i class="fa-solid fa-location-arrow"></i></a>{{/if}}
     </span>
   </header>
